@@ -34,7 +34,7 @@ public function fooAction ()
 }
 ```
 
-You can enable the tracking completely:
+You can disable the tracking completely:
 
 ```php
 $ga->setEnableTracking(false);
