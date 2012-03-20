@@ -1,0 +1,44 @@
+<?php
+/**
+ * SlmGoogleAnalytics Configuration
+ *
+ * If you have a ./configs/autoload/ directory set up for your project, you can 
+ * drop this config file in it and change the values as you wish.
+ */
+$googleAnalytics = array(
+    /**
+     * Web property ID (something like UA-xxxxx-x)
+     */
+    'id' => '',
+);
+
+/**
+ * You do not need to edit below this line
+ */
+return array(
+    'di' => array(
+        'instance' => array(
+            'alias' => array(
+                'google-analytics' => 'SlmGoogleAnalytics\Analytics\Tracker',
+            ),
+
+            'SlmGoogleAnalytics\View\Helper\GoogleAnalytics' => array(
+                'parameters' => array(
+                    'tracker' => 'google-analytics',
+                ),
+            ),
+            'google-analytics' => array(
+                'parameters' => array(
+                    'id' => $googleAnalytics['id'],
+                ),
+            ),
+            'Zend\View\HelperLoader' => array(
+                'parameters' => array(
+                    'map' => array(
+                        'googleAnalytics' => 'SlmGoogleAnalytics\View\Helper\GoogleAnalytics'
+                    ),
+                ),
+            ),
+        ),
+    ),
+);
