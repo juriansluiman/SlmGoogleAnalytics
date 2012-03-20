@@ -4,10 +4,21 @@ namespace SlmGoogleAnalytics\Analytics\Ecommerce;
 
 class Item
 {
+    protected $sku;
     protected $product;
     protected $category;
     protected $price;
     protected $quantity;
+    
+    public function getSku ()
+    {
+        return $this->sku;
+    }
+    
+    public function setSku ($sku)
+    {
+        $this->sku = $sku;
+    }
     
     public function getProduct ()
     {
