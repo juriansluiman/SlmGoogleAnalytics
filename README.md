@@ -23,9 +23,15 @@ and update your web property id there.
 
 Usage
 ---
+As tracking for Google Analytics is done with javascript, a view helper is 
+available to generate the required code based on some configuration. The
+generated code is pushed into a `Zend\View\Helper\HeadScript` helper, by default
+the `Zend\View\Helper\InlineScript` is used, but this can be modified into 
+`HeadScript` or any other helper extending the `HeadScript` helper class.
+
 The `SlmGoogleAnalytics\Analytics\Tracker` is aliased to `google-analytics` in 
-the DI configuration. You can access this object inside a controller using the
-locator:
+the DI configuration. This object is used to configure the Google Analytics
+tracking. You can access this object inside a controller using the locator:
 
 ```php
 public function fooAction ()
