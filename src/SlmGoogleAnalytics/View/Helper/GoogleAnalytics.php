@@ -36,13 +36,14 @@ class GoogleAnalytics extends AbstractHelper
          * We can use a HeadScript or InlineScript container or any other class
          * based on the HeadScript view helper.
          */
-        $container = $this->view->getHelper($this->container);
+        $container = $this->view->plugin($this->container);
         if (!$container instanceof HeadScript) {
             return;
         }
         
         $script  = "var _gaq = _gaq || [];\n";
-        $script .= "_gaq.push(['_setAccount', '{$this->_id}']);\n";
+        $script .= sprintf("_gaq.push(['_setAccount', '%s']);\n",
+                           $tracker->getId());
         
         if ($tracker->enabledPageTracking()) {
             $script .= "_gaq.push(['_trackPageview']);\n";
@@ -87,11 +88,11 @@ class GoogleAnalytics extends AbstractHelper
         }
         
         $script .= <<<SCRIPT
-"(function() {
+(function() {
   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();\n";
+})();\n
 SCRIPT;
 
         $container->appendScript($script);
