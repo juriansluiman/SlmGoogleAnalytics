@@ -13,7 +13,15 @@ class GoogleAnalytics extends AbstractHelper
      */
     protected $tracker;
     
+    /**
+     * @var string
+     */
     protected $container = 'InlineScript';
+    
+    /**
+     * @var bool
+     */
+    protected $rendered = false;
     
     public function __construct (Tracker $tracker)
     {
@@ -27,15 +35,18 @@ class GoogleAnalytics extends AbstractHelper
     
     public function __invoke ()
     {
+        // Do not render the GA twice
+        if  ($this->rendered) {
+            return;
+        }
+        
+        // Do not render when tracker is disabled
         $tracker = $this->tracker;
         if (!$tracker->enabled()) {
             return;
         }
         
-        /**
-         * We can use a HeadScript or InlineScript container or any other class
-         * based on the HeadScript view helper.
-         */
+        // We need to be sure $container->appendScript() can be called
         $container = $this->view->plugin($this->container);
         if (!$container instanceof HeadScript) {
             return;
@@ -96,5 +107,8 @@ class GoogleAnalytics extends AbstractHelper
 SCRIPT;
 
         $container->appendScript($script);
+        
+        // Mark this GA as rendered
+        $this->rendered = true;
     }
 }
