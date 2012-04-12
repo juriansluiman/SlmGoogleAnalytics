@@ -15,6 +15,12 @@ class Transaction
     
     protected $items;
     
+    public function __construct ($id, $total)
+    {
+        $this->setId($id);
+        $this->setTotal($total);
+    }
+    
     public function getId ()
     {
         return $this->id;

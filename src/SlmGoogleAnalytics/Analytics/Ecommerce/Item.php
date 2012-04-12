@@ -5,10 +5,25 @@ namespace SlmGoogleAnalytics\Analytics\Ecommerce;
 class Item
 {
     protected $sku;
-    protected $product;
-    protected $category;
     protected $price;
     protected $quantity;
+    protected $product;
+    protected $category;
+    
+    public function __construct ($sku, $price, $quantity, $product = null, $category = null)
+    {
+        $this->setSku($sku);
+        $this->setPrice($price);
+        $this->setQuantity($quantity);
+        
+        if (null !== $product) {
+            $this->setProduct($product);
+        }
+        
+        if (null !== $category) {
+            $this->setCategory($category);
+        }
+    }
     
     public function getSku ()
     {
