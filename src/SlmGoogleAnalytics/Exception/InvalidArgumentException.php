@@ -31,6 +31,8 @@
  * @license    http://unlicense.org Unlicense
  */
 
+namespace SlmGoogleAnalytics\Exception;
+
 class InvalidArgumentException extends \InvalidArgumentException
 {
     
