@@ -78,8 +78,8 @@ class ItemTest extends TestCase
         $transaction->addItem($item1);
         $transaction->addItem($item2);
         
-        $items = count($transaction->items());
-        $this->assertEquals(1, $items);
+        $items = $transaction->items();
+        $this->assertEquals(1, count($items));
         
         $item = reset($items);
         $this->assertEquals(2, $item->getQuantity());
