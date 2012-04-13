@@ -90,15 +90,4 @@ class EventTest extends TestCase
         $this->assertEquals('Label', $event->getLabel());
         $this->assertEquals(123, $event->getValue());
     }
-    
-    public function testCannotAddSameEventTwice ()
-    {
-        $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
-        
-        $tracker = new Tracker(123);
-        $event   = new Event('Category', 'Action');
-        
-        $tracker->addEvent($event);
-        $tracker->addEvent($event);
-    }
 }
