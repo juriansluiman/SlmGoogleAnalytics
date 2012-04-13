@@ -7,7 +7,7 @@ return array(
     'SlmGoogleAnalytics\Analytics\Ecommerce\Transaction'         => __DIR__ . '/src/SlmGoogleAnalytics/Analytics/Ecommerce/Transaction.php',
     'SlmGoogleAnalytics\Analytics\Event'                         => __DIR__ . '/src/SlmGoogleAnalytics/Analytics/Event.php',
     'SlmGoogleAnalytics\Analytics\Tracker'                       => __DIR__ . '/src/SlmGoogleAnalytics/Analytics/Tracker.php',
-    'InvalidArgumentException'                                   => __DIR__ . '/src/SlmGoogleAnalytics/Exception/InvalidArgumentException.php',
+    'SlmGoogleAnalytics\Exception\InvalidArgumentException'      => __DIR__ . '/src/SlmGoogleAnalytics/Exception/InvalidArgumentException.php',
     'SlmGoogleAnalyticsTest\Analytics\TrackerTest'               => __DIR__ . '/tests/SlmGoogleAnalyticsTest/Analytics/TrackerTest.php',
     'SlmGoogleAnalyticsTest\Analytics\EventTest'                 => __DIR__ . '/tests/SlmGoogleAnalyticsTest/Analytics/EventTest.php',
     'SlmGoogleAnalyticsTest\Analytics\Ecommerce\ItemTest'        => __DIR__ . '/tests/SlmGoogleAnalyticsTest/Analytics/Ecommerce/ItemTest.php',
