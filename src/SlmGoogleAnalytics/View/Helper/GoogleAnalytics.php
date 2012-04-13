@@ -28,7 +28,12 @@ class GoogleAnalytics extends AbstractHelper
         $this->tracker = $tracker;
     }
     
-    public function setViewContainer ($container)
+    public function getContainer ()
+    {
+        return $this->container;
+    }
+    
+    public function setContainer ($container)
     {
         $this->container = $container;
     }
@@ -47,7 +52,7 @@ class GoogleAnalytics extends AbstractHelper
         }
         
         // We need to be sure $container->appendScript() can be called
-        $container = $this->view->plugin($this->container);
+        $container = $this->view->plugin($this->getContainer());
         if (!$container instanceof HeadScript) {
             return;
         }
