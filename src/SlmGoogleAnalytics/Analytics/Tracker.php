@@ -3,6 +3,7 @@
 namespace SlmGoogleAnalytics\Analytics;
 
 use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
+use SlmGoogleAnalytics\Exception\InvalidArgumentException;
 
 class Tracker
 {
@@ -73,9 +74,6 @@ class Tracker
             $this->events = array();
         }
         
-        /**
-         * @todo Check object hash map
-         */
         $this->events[] = $event;
     }
     
@@ -90,9 +88,14 @@ class Tracker
             $this->transactions = array();
         }
         
-        /**
-         * @todo Check object hash map
-         */
-        $this->transactions[] = $transaction;
+        $id = $transaction->getId();
+        if (array_key_exists($id, $this->transactions)) {
+            throw new InvalidArgumentException(sprintf(
+                'Cannot add transaction with id %s, it already exists',
+                $id
+            ));
+        }
+        
+        $this->transactions[$id] = $transaction;
     }
 }
