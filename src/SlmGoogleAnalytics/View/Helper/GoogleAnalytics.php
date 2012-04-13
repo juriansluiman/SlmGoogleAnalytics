@@ -2,9 +2,11 @@
 
 namespace SlmGoogleAnalytics\View\Helper;
 
-use Zend\View\Helper\AbstractHelper,
-    Zend\View\Helper\HeadScript,
-    SlmGoogleAnalytics\Analytics\Tracker;
+use Zend\View\Helper\AbstractHelper;
+use Zend\View\Helper\HeadScript;
+use SlmGoogleAnalytics\Analytics\Tracker;
+
+use SlmGoogleAnalytics\Exception\InvalidArgumentException;
 
 class GoogleAnalytics extends AbstractHelper
 {
@@ -54,7 +56,10 @@ class GoogleAnalytics extends AbstractHelper
         // We need to be sure $container->appendScript() can be called
         $container = $this->view->plugin($this->getContainer());
         if (!$container instanceof HeadScript) {
-            return;
+            throw new InvalidArgumentException(sprintf(
+                'Container %s does not extend HeadScript view helper',
+                 $this->getContainer()
+            ));
         }
         
         $script  = "var _gaq = _gaq || [];\n";
