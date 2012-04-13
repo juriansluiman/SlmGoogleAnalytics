@@ -6,7 +6,7 @@ use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\HeadScript;
 use SlmGoogleAnalytics\Analytics\Tracker;
 
-use SlmGoogleAnalytics\Exception\InvalidArgumentException;
+use SlmGoogleAnalytics\Exception\RuntimeException;
 
 class GoogleAnalytics extends AbstractHelper
 {
@@ -56,7 +56,7 @@ class GoogleAnalytics extends AbstractHelper
         // We need to be sure $container->appendScript() can be called
         $container = $this->view->plugin($this->getContainer());
         if (!$container instanceof HeadScript) {
-            throw new InvalidArgumentException(sprintf(
+            throw new RuntimeException(sprintf(
                 'Container %s does not extend HeadScript view helper',
                  $this->getContainer()
             ));
