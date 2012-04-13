@@ -2,6 +2,8 @@ SlmGoogleAnalytics
 ===
 Version 0.0.1 Created by Jurian Sluiman
 
+[![Build Status](https://secure.travis-ci.org/juriansluiman/SlmGoogleAnalytics.png?branch=master)](http://travis-ci.org/juriansluiman/SlmGoogleAnalytics)
+
 Introduction
 ---
 SlmGoogleAnalytics is a small module to provide the logging of pages, events and
