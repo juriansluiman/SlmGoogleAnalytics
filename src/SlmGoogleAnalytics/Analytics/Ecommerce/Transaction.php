@@ -112,6 +112,14 @@ class Transaction
             $this->items = array();
         }
         
-        $this->items[] = $item;
+        $sku = $item->getSku();
+        if (array_key_exists($sku, $this->items)) {
+            $quantity = $this->items[$sku]->getQuantity()
+                      + $item->getQuantity();
+            
+            $this->items[$sku]->setQuantity($quantity);
+        } else {
+            $this->items[$sku] = $item;
+        }
     }
 }
