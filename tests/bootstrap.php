@@ -39,4 +39,4 @@ error_reporting(E_ALL | E_STRICT);
 define('BASE_PATH',  dirname(__DIR__));
 
 // Load autoloader
-require_once BASE_PATH . '/autoload_register.php';
+require_once BASE_PATH . '/vendor/autoload.php';
