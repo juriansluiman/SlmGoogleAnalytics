@@ -111,7 +111,7 @@ class GoogleAnalyticsTest extends TestCase
     
     public function testHelperThrowsExceptionWithNonExistingContainer ()
     {
-        $this->setExpectedException('Zend\Loader\Exception');
+        $this->setExpectedException('Zend\Loader\Exception\RuntimeException');
         
         $this->helper->setContainer('NonExistingViewHelper');
         $helper = $this->helper;
