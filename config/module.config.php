@@ -38,78 +38,33 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
-namespace SlmGoogleAnalytics\Analytics\Ecommerce;
 
-class Item
-{
-    protected $sku;
-    protected $price;
-    protected $quantity;
-    protected $product;
-    protected $category;
+use SlmGoogleAnalytics\Analytics;
+use SlmGoogleAnalytics\View\Helper;
 
-    public function __construct ($sku, $price, $quantity, $product = null, $category = null)
-    {
-        $this->setSku($sku);
-        $this->setPrice($price);
-        $this->setQuantity($quantity);
+return array(
+	'view_helpers' => array(
+        'factories' => array(
+            'googleAnalytics' => function($sm) {
+            	$tracker = $sm->getServiceLocator()->get('google-analytics');
+            	$helper  = new Helper\GoogleAnalytics($tracker);
 
-        if (null !== $product) {
-            $this->setProduct($product);
-        }
+            	return $helper;
+            },
+        ),
+    ),
+    'service_manager' => array(
+    	'aliases' => array(
+    		'google-analytics' => 'SlmGoogleAnalytics\Analytics\Tracker',
+		),
+        'factories' => array(
+            'SlmGoogleAnalytics\Analytics\Tracker' => function($sm) {
+            	$config = $sm->get('config');
+            	$config = $config['google_analytics'];
 
-        if (null !== $category) {
-            $this->setCategory($category);
-        }
-    }
-
-    public function getSku ()
-    {
-        return $this->sku;
-    }
-
-    public function setSku ($sku)
-    {
-        $this->sku = $sku;
-    }
-
-    public function getProduct ()
-    {
-        return $this->product;
-    }
-
-    public function setProduct ($product)
-    {
-        $this->product = $product;
-    }
-
-    public function getCategory ()
-    {
-        return $this->category;
-    }
-
-    public function setCategory ($category)
-    {
-        $this->category = $category;
-    }
-
-    public function getPrice ()
-    {
-        return $this->price;
-    }
-
-    public function setPrice ($price)
-    {
-        $this->price = $price;
-    }
-
-    public function getQuantity ()
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity ($quantity)
-    {
-        $this->quantity = $quantity;
-    }
-}
+            	$tracker = new Analytics\Tracker($config['id']);
+            	return $tracker;
+            },
+        ),
+    ),
+);
