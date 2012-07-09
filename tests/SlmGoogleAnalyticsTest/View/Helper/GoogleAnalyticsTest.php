@@ -44,15 +44,12 @@ use StdClass;
 use PHPUnit_Framework_TestCase as TestCase;
 
 use Zend\View\Renderer\PhpRenderer;
-use SlmGoogleAnalytics\Analytics\Tracker;
 use Zend\View\Helper\Placeholder\Registry as PlaceholderRegistry;
-use Zend\Registry;
+use SlmGoogleAnalytics\Analytics\Tracker;
 use SlmGoogleAnalytics\View\Helper\GoogleAnalytics as Helper;
 
 use SlmGoogleAnalyticsTest\View\Helper\TestAsset\CustomViewHelper;
-
 use SlmGoogleAnalytics\Analytics\Event;
-
 use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
 use SlmGoogleAnalytics\Analytics\Ecommerce\Item;
 
@@ -70,11 +67,12 @@ class GoogleAnalyticsTest extends TestCase
 
     public function setUp ()
     {
-        $regKey = PlaceholderRegistry::REGISTRY_KEY;
-        if (Registry::isRegistered($regKey)) {
-            $registry = Registry::getInstance();
-            unset($registry[$regKey]);
-        }
+        PlaceholderRegistry::unsetRegistry();
+        // $regKey = PlaceholderRegistry::REGISTRY_KEY;
+        // if (Registry::isRegistered($regKey)) {
+        //     $registry = Registry::getInstance();
+        //     unset($registry[$regKey]);
+        // }
 
         $this->tracker = new Tracker(123);
         $this->helper  = new Helper($this->tracker);
@@ -118,7 +116,7 @@ class GoogleAnalyticsTest extends TestCase
 
     public function testHelperThrowsExceptionWithNonExistingContainer ()
     {
-        $this->setExpectedException('Zend\Loader\Exception\RuntimeException');
+        $this->setExpectedException('Zend\ServiceManager\Exception\ServiceNotFoundException');
 
         $this->helper->setContainer('NonExistingViewHelper');
         $helper = $this->helper;
@@ -133,8 +131,8 @@ class GoogleAnalyticsTest extends TestCase
         $plugin = new CustomViewHelper;
         $plugin->setView($view);
 
-        $broker = $view->getBroker();
-        $broker->register('CustomViewHelper', $plugin);
+        $broker = $view->getHelperPluginManager();
+        $broker->setService('CustomViewHelper', $plugin);
 
         $this->helper->setContainer('CustomViewHelper');
         $helper = $this->helper;
