@@ -38,52 +38,33 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
-namespace SlmGoogleAnalytics;
 
-use Zend\ModuleManager\Feature;
-use Zend\EventManager\Event;
-use Zend\Mvc\MvcEvent;
+use SlmGoogleAnalytics\Analytics;
+use SlmGoogleAnalytics\View\Helper;
 
-class Module implements
-    Feature\AutoloaderProviderInterface,
-    Feature\ConfigProviderInterface,
-    Feature\BootstrapListenerInterface
-{
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
-                __DIR__ . '/autoload_classmap.php',
-            ),
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
-    }
+return array(
+	'view_helpers' => array(
+        'factories' => array(
+            'googleAnalytics' => function($sm) {
+            	$tracker = $sm->getServiceLocator()->get('google-analytics');
+            	$helper  = new Helper\GoogleAnalytics($tracker);
 
-    public function getConfig()
-    {
-        return include __DIR__ . '/config/module.config.php';
-    }
+            	return $helper;
+            },
+        ),
+    ),
+    'service_manager' => array(
+    	'aliases' => array(
+    		'google-analytics' => 'SlmGoogleAnalytics\Analytics\Tracker',
+		),
+        'factories' => array(
+            'SlmGoogleAnalytics\Analytics\Tracker' => function($sm) {
+            	$config = $sm->get('config');
+            	$config = $config['google_analytics'];
 
-    /**
-     * When the render event is triggered, we invoke the view helper to
-     * render the javascript code.
-     *
-     * @param MvcEvent $e
-     */
-    public function onBootstrap(Event $e)
-    {
-        $app = $e->getParam('application');
-        $sm  = $app->getServiceManager();
-        $em  = $app->getEventManager();
-
-        $em->attach(MvcEvent::EVENT_RENDER, function(MvcEvent $e) use ($sm) {
-            $view   = $sm->get('ViewHelperManager');
-            $plugin = $view->get('googleAnalytics');
-            $plugin();
-        });
-    }
-}
+            	$tracker = new Analytics\Tracker($config['id']);
+            	return $tracker;
+            },
+        ),
+    ),
+);
