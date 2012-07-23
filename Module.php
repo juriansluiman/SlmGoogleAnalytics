@@ -40,8 +40,8 @@
  */
 namespace SlmGoogleAnalytics;
 
+use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature;
-use Zend\EventManager\Event;
 use Zend\Mvc\MvcEvent;
 
 class Module implements
@@ -74,7 +74,7 @@ class Module implements
      *
      * @param MvcEvent $e
      */
-    public function onBootstrap(Event $e)
+    public function onBootstrap(EventInterface $e)
     {
         $app = $e->getParam('application');
         $sm  = $app->getServiceManager();
