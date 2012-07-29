@@ -75,6 +75,8 @@ class GoogleAnalyticsTest extends TestCase
         // }
 
         $this->tracker = new Tracker(123);
+        $this->tracker->setDomainName('none');
+        $this->tracker->setAllowLinker(true);
         $this->helper  = new Helper($this->tracker);
 
         $view = new PhpRenderer;
@@ -94,6 +96,24 @@ class GoogleAnalyticsTest extends TestCase
 
         $output = $this->getOutput($this->helper);
         $this->assertContains("_gaq.push(['_setAccount', '123'])", $output);
+    }
+
+    public function testHelperRendersDomainName ()
+    {
+        $helper = $this->helper;
+        $helper();
+
+        $output = $this->getOutput($this->helper);
+        $this->assertContains("_gaq.push(['_setDomainName', 'none'])", $output);
+    }
+
+    public function testHelperRendersDomainName ()
+    {
+        $helper = $this->helper;
+        $helper();
+
+        $output = $this->getOutput($this->helper);
+        $this->assertContains("_gaq.push(['_setAllowLinker', true])", $output);
     }
 
     public function testHelperTracksPagesByDefault ()
