@@ -68,14 +68,8 @@ class GoogleAnalyticsTest extends TestCase
     public function setUp ()
     {
         PlaceholderRegistry::unsetRegistry();
-        // $regKey = PlaceholderRegistry::REGISTRY_KEY;
-        // if (Registry::isRegistered($regKey)) {
-        //     $registry = Registry::getInstance();
-        //     unset($registry[$regKey]);
-        // }
 
         $this->tracker = new Tracker(123);
-        $this->tracker->setDomainName('none');
         $this->tracker->setAllowLinker(true);
         $this->helper  = new Helper($this->tracker);
 
@@ -96,24 +90,6 @@ class GoogleAnalyticsTest extends TestCase
 
         $output = $this->getOutput($this->helper);
         $this->assertContains("_gaq.push(['_setAccount', '123'])", $output);
-    }
-
-    public function testHelperRendersDomainName ()
-    {
-        $helper = $this->helper;
-        $helper();
-
-        $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_setDomainName', 'none'])", $output);
-    }
-
-    public function testHelperRendersDomainName ()
-    {
-        $helper = $this->helper;
-        $helper();
-
-        $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_setAllowLinker', true])", $output);
     }
 
     public function testHelperTracksPagesByDefault ()
@@ -196,6 +172,26 @@ SCRIPT;
         $output2 = $this->getOutput($this->helper);
 
         $this->assertEquals($output1, $output2);
+    }
+
+    public function testHelperRendersDomainName ()
+    {
+        $this->tracker->setDomainName('foobar');
+        $helper = $this->helper;
+        $helper();
+
+        $output = $this->getOutput($this->helper);
+        $this->assertContains("_gaq.push(['_setDomainName', 'foobar'])", $output);
+    }
+
+    public function testHelperRendersAllowLinker ()
+    {
+        $this->tracker->setAllowLinker(true);
+        $helper = $this->helper;
+        $helper();
+
+        $output = $this->getOutput($this->helper);
+        $this->assertContains("_gaq.push(['_setAllowLinker', true])", $output);
     }
 
     public function testHelperRendersEvent ()
