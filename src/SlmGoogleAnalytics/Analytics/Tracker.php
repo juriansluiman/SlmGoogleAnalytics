@@ -63,6 +63,9 @@ class Tracker
 
     protected $enablePageTracking = true;
 
+    protected $allowLinker = false;
+    protected $domainName = false;
+
     protected $events;
     protected $transactions;
 
@@ -99,6 +102,25 @@ class Tracker
     public function setEnablePageTracking ($enable_page_tracking = true)
     {
         $this->enablePageTracking = (bool) $enable_page_tracking;
+    }
+    
+    public function setAllowLinker($allowLinker) {
+        $this->allowLinker = (bool) $allowLinker;
+    }
+
+    public function getAllowLinker() {
+        return $this->allowLinker;
+    }
+
+    public function setDomainName($domainName = null) {
+        if (!is_string($domainName))
+            $this->domainName = false;
+        else
+            $this->domainName = $domainName;
+    }
+
+    public function getDomainName() {
+        return $this->domainName;
     }
 
     public function events ()

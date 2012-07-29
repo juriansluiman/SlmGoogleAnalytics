@@ -103,6 +103,15 @@ class GoogleAnalytics extends AbstractHelper
         $script  = "var _gaq = _gaq || [];\n";
         $script .= sprintf("_gaq.push(['_setAccount', '%s']);\n",
                            $tracker->getId());
+    
+        if (is_string($tracker->getDomainName())) {
+            $script .= sprintf("_gaq.push(['_setDomainName'], '%s');\n",
+                    $tracker->getDomainName());;
+        }
+        
+        if ($tracker->getDomainName()) {
+            $script .= "_gaq.push(['_setAllowLinker'], true);\n";
+        }
 
         if ($tracker->enabledPageTracking()) {
             $script .= "_gaq.push(['_trackPageview']);\n";

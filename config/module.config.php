@@ -63,6 +63,15 @@ return array(
             	$config = $config['google_analytics'];
 
             	$tracker = new Analytics\Tracker($config['id']);
+                
+                if (isset($config['domainName'])) {
+                    $tracker->setDomainName($config['domainName']);
+                }
+                
+                if (isset($config['allowLinker'])) {
+                    $tracker->setAllowLinker($config['allowLinker']);
+                }
+                
             	return $tracker;
             },
         ),

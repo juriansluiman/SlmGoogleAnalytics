@@ -62,4 +62,28 @@ class TrackerTest extends TestCase
         $tracker = new Tracker(123);
         $this->assertTrue($tracker->enabledPageTracking());
     }
+    
+    public function testDomainNameDefaultsToFalse ()
+    {
+        $tracker = new Tracker(123);
+        $this->assertFalse($tracker->getDomainName());
+    }
+
+    public function testDomainNameReturnsString ()
+    {
+        $tracker = new Tracker(123);
+        $tracker->setDomainName('none');
+
+        $this->assertType('string', $tracker->getDomainName());
+        $this->assertEquals($tracker->getDomainName(), 'none');
+    }
+
+    public function testAllowLinkerDefaultsToFalse ()
+    {
+        $tracker = new Tracker(123);
+        $tracker->setAllowLinker(true);
+        $this->assertTrue($tracker->getAllowLinker());
+    }
+
 }
+
