@@ -64,7 +64,7 @@ class Tracker
     protected $enablePageTracking = true;
 
     protected $allowLinker = false;
-    protected $domainName = false;
+    protected $domainName;
 
     protected $events;
     protected $transactions;
@@ -127,6 +127,11 @@ class Tracker
         return $this->domainName;
     }
 
+    public function clearDomainName()
+    {
+        $this->domainName = null;
+    }
+    
     public function events ()
     {
         return $this->events;

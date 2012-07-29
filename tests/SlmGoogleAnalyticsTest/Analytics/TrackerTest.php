@@ -69,13 +69,21 @@ class TrackerTest extends TestCase
         $this->assertFalse($tracker->getDomainName());
     }
 
-    public function testDomainNameReturnsString ()
+    public function testDomainName ()
     {
         $tracker = new Tracker(123);
         $tracker->setDomainName('none');
 
-        $this->assertType('string', $tracker->getDomainName());
         $this->assertEquals($tracker->getDomainName(), 'none');
+    }
+
+    public function testClearDomainNameReturnsNull()
+    {
+        $tracker = new Tracker(123);
+        $tracker->setDomainName('none');
+
+        $tracker->clearDomainName();
+        $this->assertNull($tracker->getDomainName());
     }
 
     public function testAllowLinkerDefaultsToFalse ()
