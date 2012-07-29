@@ -104,22 +104,26 @@ class Tracker
         $this->enablePageTracking = (bool) $enable_page_tracking;
     }
     
-    public function setAllowLinker($allowLinker) {
-        $this->allowLinker = (bool) $allowLinker;
+    public function setAllowLinker($allow_linker)
+    {
+        $this->allowLinker = (bool) $allow_linker;
     }
 
-    public function getAllowLinker() {
+    public function getAllowLinker()
+    {
         return $this->allowLinker;
     }
 
-    public function setDomainName($domainName = null) {
-        if (!is_string($domainName))
-            $this->domainName = false;
-        else
-            $this->domainName = $domainName;
+    public function setDomainName($domain_name)
+    {
+        if (!is_string($domain_name))
+            throw new InvalidArgumentException('$domain_name is not a string');
+            
+        $this->domainName = $domain_name;
     }
 
-    public function getDomainName() {
+    public function getDomainName()
+    {
         return $this->domainName;
     }
 

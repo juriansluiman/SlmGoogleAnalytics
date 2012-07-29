@@ -64,12 +64,12 @@ return array(
 
             	$tracker = new Analytics\Tracker($config['id']);
                 
-                if (isset($config['domainName'])) {
-                    $tracker->setDomainName($config['domainName']);
+                if (isset($config['domain_name'])) {
+                    $tracker->setDomainName($config['domain_name']);
                 }
                 
-                if (isset($config['allowLinker'])) {
-                    $tracker->setAllowLinker($config['allowLinker']);
+                if (isset($config['allow_linker'])) {
+                    $tracker->setAllowLinker($config['allow_linker']);
                 }
                 
             	return $tracker;
