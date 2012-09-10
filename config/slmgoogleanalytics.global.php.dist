@@ -15,7 +15,7 @@ $googleAnalytics = array(
      * Tracking across multiple (sub)domains
      * @see https://developers.google.com/analytics/devguides/collection/gajs/gaTrackingSite
      */
-    'domain_name' 	=> false,
+    'domain_name' 	=> '',
     'allow_linking' => false,
 );
 
