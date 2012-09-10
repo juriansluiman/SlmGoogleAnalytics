@@ -44,10 +44,14 @@ use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature;
 use Zend\Mvc\MvcEvent;
 
+use SlmGoogleAnalytics\Analytics;
+use SlmGoogleAnalytics\View\Helper;
+
 class Module implements
     Feature\AutoloaderProviderInterface,
     Feature\ConfigProviderInterface,
     Feature\ViewHelperProviderInterface,
+    Feature\ServiceProviderInterface,
     Feature\BootstrapListenerInterface
 {
     public function getAutoloaderConfig()
@@ -78,6 +82,33 @@ class Module implements
                     $helper  = new Helper\GoogleAnalytics($tracker);
 
                     return $helper;
+                },
+            ),
+        );
+    }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'aliases' => array(
+                'google-analytics' => 'SlmGoogleAnalytics\Analytics\Tracker',
+            ),
+            'factories' => array(
+                'SlmGoogleAnalytics\Analytics\Tracker' => function($sm) {
+                    $config = $sm->get('config');
+                    $config = $config['google_analytics'];
+
+                    $tracker = new Analytics\Tracker($config['id']);
+
+                    if (isset($config['domain_name'])) {
+                        $tracker->setDomainName($config['domain_name']);
+                    }
+
+                    if (isset($config['allow_linker'])) {
+                        $tracker->setAllowLinker($config['allow_linker']);
+                    }
+
+                    return $tracker;
                 },
             ),
         );
