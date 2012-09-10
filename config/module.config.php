@@ -43,6 +43,12 @@ use SlmGoogleAnalytics\Analytics;
 use SlmGoogleAnalytics\View\Helper;
 
 return array(
+    'google_analytics' => array(
+        'id'           => '',
+        'domain_name'  => '',
+        'allow_linker' => '',
+    ),
+
 	'view_helpers' => array(
         'factories' => array(
             'googleAnalytics' => function($sm) {
@@ -63,15 +69,15 @@ return array(
             	$config = $config['google_analytics'];
 
             	$tracker = new Analytics\Tracker($config['id']);
-                
+
                 if (isset($config['domain_name'])) {
                     $tracker->setDomainName($config['domain_name']);
                 }
-                
+
                 if (isset($config['allow_linker'])) {
                     $tracker->setAllowLinker($config['allow_linker']);
                 }
-                
+
             	return $tracker;
             },
         ),

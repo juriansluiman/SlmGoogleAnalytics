@@ -10,7 +10,7 @@ $googleAnalytics = array(
      * Web property ID (something like UA-xxxxx-x)
      */
     'id' => '',
-    
+
     /**
      * Tracking across multiple (sub)domains
      * @see https://developers.google.com/analytics/devguides/collection/gajs/gaTrackingSite
