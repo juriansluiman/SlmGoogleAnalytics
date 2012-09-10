@@ -40,7 +40,6 @@
  */
 
 use SlmGoogleAnalytics\Analytics;
-use SlmGoogleAnalytics\View\Helper;
 
 return array(
     'google_analytics' => array(
@@ -49,16 +48,6 @@ return array(
         'allow_linker' => false,
     ),
 
-	'view_helpers' => array(
-        'factories' => array(
-            'googleAnalytics' => function($sm) {
-            	$tracker = $sm->getServiceLocator()->get('google-analytics');
-            	$helper  = new Helper\GoogleAnalytics($tracker);
-
-            	return $helper;
-            },
-        ),
-    ),
     'service_manager' => array(
     	'aliases' => array(
     		'google-analytics' => 'SlmGoogleAnalytics\Analytics\Tracker',

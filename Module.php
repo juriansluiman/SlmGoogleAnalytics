@@ -47,6 +47,7 @@ use Zend\Mvc\MvcEvent;
 class Module implements
     Feature\AutoloaderProviderInterface,
     Feature\ConfigProviderInterface,
+    Feature\ViewHelperProviderInterface,
     Feature\BootstrapListenerInterface
 {
     public function getAutoloaderConfig()
@@ -66,6 +67,20 @@ class Module implements
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
+    }
+
+    public function getViewHelperConfig()
+    {
+        return array(
+            'factories' => array(
+                'googleAnalytics' => function($sm) {
+                    $tracker = $sm->getServiceLocator()->get('google-analytics');
+                    $helper  = new Helper\GoogleAnalytics($tracker);
+
+                    return $helper;
+                },
+            ),
+        );
     }
 
     /**
