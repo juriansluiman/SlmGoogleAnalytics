@@ -56,7 +56,10 @@ class EventTest extends TestCase
 
     public function testCanAddEventToTracker ()
     {
-        $tracker = new Tracker(123);
+        $tracker = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $event   = new Event('Category', 'Action');
         $tracker->addEvent($event);
 
@@ -66,7 +69,10 @@ class EventTest extends TestCase
 
     public function testCanAddMultipleEventsToTracker ()
     {
-        $tracker = new Tracker(123);
+        $tracker = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $event1  = new Event('Category', 'Action');
         $event2  = new Event('Category', 'Action');
         $tracker->addEvent($event1);

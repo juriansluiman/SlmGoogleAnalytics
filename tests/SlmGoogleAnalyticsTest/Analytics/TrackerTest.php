@@ -47,38 +47,56 @@ class TrackerTest extends TestCase
 {
     public function testCanInstantiateTracker ()
     {
-        $tracker = new Tracker(123);
+        $tracker = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $this->assertEquals(123, $tracker->getId());
     }
 
     public function testIsEnabledByDefault ()
     {
-        $tracker = new Tracker(123);
+        $tracker = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $this->assertTrue($tracker->enabled());
     }
 
     public function testHasPageTrackingEnabledByDefault ()
     {
-        $tracker = new Tracker(123);
+        $tracker = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $this->assertTrue($tracker->enabledPageTracking());
     }
 
     public function testDomainNameDefaultsToFalse ()
     {
-        $tracker = new Tracker(123);
+        $tracker = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $this->assertNull($tracker->getDomainName());
     }
 
     public function testDomainName ()
     {
-        $tracker = new Tracker(123);
+        $tracker = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $tracker->setDomainName('foobar');
         $this->assertEquals($tracker->getDomainName(), 'foobar');
     }
 
     public function testClearDomainNameReturnsNull()
     {
-        $tracker = new Tracker(123);
+        $tracker = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $tracker->setDomainName('foobar');
         $tracker->clearDomainName();
         $this->assertNull($tracker->getDomainName());
@@ -86,10 +104,14 @@ class TrackerTest extends TestCase
 
     public function testAllowLinkerDefaultsToFalse ()
     {
-        $tracker = new Tracker(123);
+        $tracker = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $tracker->setAllowLinker(true);
         $this->assertTrue($tracker->getAllowLinker());
     }
 
 }
+
 

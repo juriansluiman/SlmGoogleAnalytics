@@ -56,7 +56,10 @@ class TransactionTest extends TestCase
 
     public function testCanAddTransactionToTracker ()
     {
-        $tracker     = new Tracker(123);
+        $tracker     = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $transaction = new Transaction(123, 12.50);
         $tracker->addTransaction($transaction);
 
@@ -66,7 +69,10 @@ class TransactionTest extends TestCase
 
     public function testCanAddMultipleTransactionsToTracker ()
     {
-        $tracker      = new Tracker(123);
+        $tracker      = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $transaction1 = new Transaction(123, 12.50);
         $transaction2 = new Transaction(456, 12.50);
         $tracker->addTransaction($transaction1);
@@ -80,7 +86,10 @@ class TransactionTest extends TestCase
     {
         $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
 
-        $tracker      = new Tracker(123);
+        $tracker      = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $transaction1 = new Transaction(456, 12.50);
         $transaction2 = new Transaction(456, 12.50);
 
@@ -88,3 +97,4 @@ class TransactionTest extends TestCase
         $tracker->addTransaction($transaction2);
     }
 }
+

@@ -68,7 +68,7 @@ class Tracker
     
     protected $persistentStorage;
 
-    public function __construct ($id, $persistentStorage)
+    public function __construct ($id, \Zend\Session\Container $persistentStorage)
     {
         $this->setId($id);
         $this->setPersistentStorage($persistentStorage);
@@ -84,7 +84,7 @@ class Tracker
         $this->id = $id;
     }
 
-    public function setPersistentStorage($persistentStorage)
+    public function setPersistentStorage(\Zend\Session\Container $persistentStorage)
     {
         $this->persistentStorage = $persistentStorage;
     }
@@ -148,7 +148,9 @@ class Tracker
             $this->persistentStorage->events = array();
         }
 
-        $this->persistentStorage->events[] = $event;
+        $events = $this->persistentStorage->events;
+        $events[] = $event;
+        $this->persistentStorage->events = $events;
     }
 
     public function transactions ()
@@ -169,8 +171,10 @@ class Tracker
                 $id
             ));
         }
-
-       $this->persistentStorage->transactions[$id] = $transaction;
+        
+        $transactions = $this->persistentStorage->transactions;
+        $transactions[$id] = $transaction;
+        $this->persistentStorage->transactions = $transactions;
     }
     
     public function clearData()
