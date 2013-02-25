@@ -98,7 +98,10 @@ class Module implements
                     $config = $sm->get('config');
                     $config = $config['google_analytics'];
 
-                    $tracker = new Analytics\Tracker($config['id']);
+                    $tracker = new Analytics\Tracker(
+                        $config['id'],
+                        new \Zend\Session\Container('google_analytics_storage')
+                    );
 
                     if (isset($config['domain_name'])) {
                         $tracker->setDomainName($config['domain_name']);

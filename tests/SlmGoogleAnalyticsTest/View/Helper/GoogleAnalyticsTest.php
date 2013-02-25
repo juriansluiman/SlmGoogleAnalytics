@@ -69,7 +69,10 @@ class GoogleAnalyticsTest extends TestCase
     {
         PlaceholderRegistry::unsetRegistry();
 
-        $this->tracker = new Tracker(123);
+        $this->tracker = new Tracker(
+            123,
+            new \Zend\Session\Container('google_analytics_storage')
+        );
         $this->tracker->setAllowLinker(true);
         $this->helper  = new Helper($this->tracker);
 
