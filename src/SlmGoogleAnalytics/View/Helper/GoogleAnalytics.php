@@ -165,6 +165,8 @@ SCRIPT;
 
         $container->appendScript($script);
 
+        $tracker->clearData();
+        
         // Mark this GA as rendered
         $this->rendered = true;
     }

@@ -65,13 +65,13 @@ class Tracker
 
     protected $allowLinker = false;
     protected $domainName;
+    
+    protected $persistentStorage;
 
-    protected $events;
-    protected $transactions;
-
-    public function __construct ($id)
+    public function __construct ($id, $persistentStorage)
     {
         $this->setId($id);
+        $this->setPersistentStorage($persistentStorage);
     }
 
     public function getId ()
@@ -84,6 +84,11 @@ class Tracker
         $this->id = $id;
     }
 
+    public function setPersistentStorage($persistentStorage)
+    {
+        $this->persistentStorage = $persistentStorage;
+    }
+    
     public function enabled ()
     {
         return $this->enableTracking;
@@ -134,37 +139,43 @@ class Tracker
     
     public function events ()
     {
-        return $this->events;
+        return $this->persistentStorage->events;
     }
 
     public function addEvent (Event $event)
     {
-        if (null === $this->events) {
-            $this->events = array();
+        if (null === $this->persistentStorage->events) {
+            $this->persistentStorage->events = array();
         }
 
-        $this->events[] = $event;
+        $this->persistentStorage->events[] = $event;
     }
 
     public function transactions ()
     {
-        return $this->transactions;
+        return $this->persistentStorage->transactions;
     }
 
     public function addTransaction (Transaction $transaction)
     {
-        if (null === $this->transactions) {
-            $this->transactions = array();
+        if (null === $this->persistentStorage->transactions) {
+            $this->persistentStorage->transactions = array();
         }
 
         $id = $transaction->getId();
-        if (array_key_exists($id, $this->transactions)) {
+        if (array_key_exists($id, $this->persistentStorage->transactions)) {
             throw new InvalidArgumentException(sprintf(
                 'Cannot add transaction with id %s, it already exists',
                 $id
             ));
         }
 
-        $this->transactions[$id] = $transaction;
+       $this->persistentStorage->transactions[$id] = $transaction;
+    }
+    
+    public function clearData()
+    {
+        $this->persistentStorage->events = array();
+        $this->persistentStorage->transactions = array();
     }
 }
