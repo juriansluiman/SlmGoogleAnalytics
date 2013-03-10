@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": ">=5.3.3.",
-        "zendframework/zendframework": ">=2.0.0beta5"
+        "zendframework/zendframework": "2.*"
     },
     "autoload": {
         "classmap": [
