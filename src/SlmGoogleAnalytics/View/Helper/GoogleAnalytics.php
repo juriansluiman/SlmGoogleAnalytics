@@ -113,6 +113,10 @@ class GoogleAnalytics extends AbstractHelper
             $script .= "_gaq.push(['_setAllowLinker', true]);\n";
         }
 
+        if ($tracker->getAnonymizeIp()) {
+            $script .= "_gaq.push(['_gat._anonymizeIp']);\n";
+        }
+
         if ($tracker->enabledPageTracking()) {
             $script .= "_gaq.push(['_trackPageview']);\n";
         }
