@@ -1,6 +1,6 @@
 SlmGoogleAnalytics
 ===
-Version 0.0.2 Created by Jurian Sluiman
+Version 0.1.0 Created by Jurian Sluiman
 
 [![Build Status](https://secure.travis-ci.org/juriansluiman/SlmGoogleAnalytics.png?branch=master)](http://travis-ci.org/juriansluiman/SlmGoogleAnalytics)
 
