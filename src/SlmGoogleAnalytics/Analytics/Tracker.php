@@ -66,6 +66,8 @@ class Tracker
     protected $allowLinker = false;
     protected $domainName;
 
+    protected $anonymizeIp = false;
+
     protected $events;
     protected $transactions;
 
@@ -130,6 +132,16 @@ class Tracker
     public function clearDomainName()
     {
         $this->domainName = null;
+    }
+
+    public function getAnonymizeIp()
+    {
+        return $this->anonymizeIp;
+    }
+
+    public function setAnonymizeIp($flag)
+    {
+        $this->anonymizeIp = (bool) $flag;
     }
     
     public function events ()

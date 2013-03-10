@@ -194,6 +194,25 @@ SCRIPT;
         $this->assertContains("_gaq.push(['_setAllowLinker', true])", $output);
     }
 
+    public function testHelperRendersAnonymizeIp()
+    {
+        $this->tracker->setAnonymizeIp(true);
+        $helper = $this->helper;
+        $helper();
+
+        $output = $this->getOutput($this->helper);
+        $this->assertContains("_gaq.push(['_gat._anonymizeIp'])", $output);
+    }
+
+    public function testHelperOmitsAnonymipzeIpOnFalse()
+    {
+        // Anonymizing IP addresses is false on default
+        $helper = $this->helper;
+
+        $output = $this->getOutput($this->helper);
+        $this->assertNotContains("_gaq.push(['_gat._anonymizeIp'])", $output);
+    }
+
     public function testHelperRendersEvent ()
     {
         $event = new Event('Category', 'Action', 'Label', 'Value');
