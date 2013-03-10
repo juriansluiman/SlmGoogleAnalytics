@@ -91,5 +91,17 @@ class TrackerTest extends TestCase
         $this->assertTrue($tracker->getAllowLinker());
     }
 
+    public function testAnonymizeIpDefaultsToFalse()
+    {
+        $tracker = new Tracker(123);
+        $this->assertFalse($tracker->getAnonymizeIp());
+    }
+
+    public function testAnonymizeIp()
+    {
+        $tracker = new Tracker(123);
+        $tracker->setAnonymizeIp(true);
+        $this->assertTrue($tracker->getAnonymizeIp());
+    }
 }
 
