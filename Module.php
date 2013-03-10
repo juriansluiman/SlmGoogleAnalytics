@@ -41,6 +41,7 @@
 namespace SlmGoogleAnalytics;
 
 use Zend\EventManager\EventInterface;
+use Zend\Http\Request as HttpRequest;
 use Zend\ModuleManager\Feature;
 use Zend\Mvc\MvcEvent;
 
@@ -125,6 +126,10 @@ class Module implements
         $app = $e->getParam('application');
         $sm  = $app->getServiceManager();
         $em  = $app->getEventManager();
+
+        if (!$app->getRequest() instanceof HttpRequest) {
+            return;
+        }
 
         $em->attach(MvcEvent::EVENT_RENDER, function(MvcEvent $e) use ($sm) {
             $view   = $sm->get('ViewHelperManager');
