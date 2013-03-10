@@ -1,8 +1,10 @@
 SlmGoogleAnalytics
 ===
-Version 0.0.2 Created by Jurian Sluiman
+Version 0.1.0 Created by Jurian Sluiman
 
 [![Build Status](https://secure.travis-ci.org/juriansluiman/SlmGoogleAnalytics.png?branch=master)](http://travis-ci.org/juriansluiman/SlmGoogleAnalytics)
+
+**NOTE**: This library recently is renamed to `slm/google-analytics`. If you use SlmGoogleAnalytics via composer and/or [packagist.org](http://packagist.org), please update your composer.json file!
 
 Introduction
 ---
@@ -17,7 +19,7 @@ Requirements
 
 Installation
 ---
-Add "juriansluiman/slm-google-analytics" to your composer.json, run an update with
+Add "slm/google-analytics" to your composer.json, run an update with
 composer and enable it in your `application.config.php`. Copy the
 `./vendors/SlmGoogleAnalytics/config/slmgoogleanalytics.global.php.dist`
 to your `./config/autoload/slmgoogleanalytics.global.php`
