@@ -16,7 +16,7 @@ $googleAnalytics = array(
      * @see https://developers.google.com/analytics/devguides/collection/gajs/gaTrackingSite
      */
     'domain_name' 	=> '',
-    'allow_linking' => false,
+    'allow_linker' => false,
 );
 
 /**
