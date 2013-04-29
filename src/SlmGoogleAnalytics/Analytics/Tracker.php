@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012 Jurian Sluiman.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,9 +32,8 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     SlmGoogleAnalytics
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012 Jurian Sluiman.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
@@ -105,7 +104,7 @@ class Tracker
     {
         $this->enablePageTracking = (bool) $enable_page_tracking;
     }
-    
+
     public function setAllowLinker($allow_linker)
     {
         $this->allowLinker = (bool) $allow_linker;
@@ -120,7 +119,7 @@ class Tracker
     {
         if (!is_string($domain_name))
             throw new InvalidArgumentException('$domain_name is not a string');
-            
+
         $this->domainName = $domain_name;
     }
 
@@ -143,7 +142,7 @@ class Tracker
     {
         $this->anonymizeIp = (bool) $flag;
     }
-    
+
     public function events ()
     {
         return $this->events;
