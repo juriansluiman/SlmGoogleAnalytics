@@ -108,6 +108,10 @@ class Module implements
                         $tracker->setAllowLinker($config['allow_linker']);
                     }
 
+                    if (false === $config['enable']) {
+                        $tracker->setEnableTracking(false);
+                    }
+
                     return $tracker;
                 },
             ),
