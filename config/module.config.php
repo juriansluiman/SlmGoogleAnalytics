@@ -41,6 +41,7 @@
 
 return array(
     'google_analytics' => array(
+        'enable'       => true,
         'id'           => '',
         'domain_name'  => '',
         'allow_linker' => false,

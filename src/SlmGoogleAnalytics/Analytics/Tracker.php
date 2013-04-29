@@ -105,7 +105,7 @@ class Tracker
     {
         $this->enablePageTracking = (bool) $enable_page_tracking;
     }
-    
+
     public function setAllowLinker($allow_linker)
     {
         $this->allowLinker = (bool) $allow_linker;
@@ -120,7 +120,7 @@ class Tracker
     {
         if (!is_string($domain_name))
             throw new InvalidArgumentException('$domain_name is not a string');
-            
+
         $this->domainName = $domain_name;
     }
 
@@ -143,7 +143,7 @@ class Tracker
     {
         $this->anonymizeIp = (bool) $flag;
     }
-    
+
     public function events ()
     {
         return $this->events;
