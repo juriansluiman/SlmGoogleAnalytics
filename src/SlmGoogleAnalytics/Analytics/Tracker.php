@@ -67,6 +67,7 @@ class Tracker
 
     protected $anonymizeIp = false;
 
+    protected $customVariables;
     protected $events;
     protected $transactions;
 
@@ -143,6 +144,29 @@ class Tracker
         $this->anonymizeIp = (bool) $flag;
     }
 
+    public function customVariables()
+    {
+        return $this->customVariables;
+    }
+    
+    public function addCustomVariable(CustomVariable $variable)
+    {
+        if (null === $this->customVariables) {
+            $this->customVariables = array();
+        }
+        
+        $index = $variable->getIndex();
+        
+        if (array_key_exists($index, $this->customVariables)) {
+            throw new InvalidArgumentException(
+                'Cannot add custom variable with index %d, it already exists',
+                $index
+            );
+        }
+        
+        $this->customVariables[] = $variable;
+    }
+    
     public function events ()
     {
         return $this->events;
