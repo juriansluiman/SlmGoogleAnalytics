@@ -98,12 +98,18 @@ class CustomVariable
 
     public function setScope($scope)
     {
-        if (!is_int($scope)) {
+        $allowed = array(
+            self::SCOPE_VISITOR,
+            self::SCOPE_SESSION,
+            self::SCOPE_PAGE_LEVEL
+        );
+        
+        if (!in_array($scope, $allowed, true)) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'Scope must be of type integer, %s given',
-                    gettype($scope)
-                )
+                    'Invalid value given for scope. Acceptable values are: %s.',
+                    implode(', ', $allowed)
+                )    
             );
         }
         
