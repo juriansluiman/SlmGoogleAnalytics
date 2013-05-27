@@ -72,17 +72,26 @@ class CustomeVariableTest extends TestCase
         $this->assertCount(2, $tracker->customVariables());
     }
 
+    public function testAddCustomVariablesWithSameId()
+    {
+        $tracker = new Tracker(123);
+        $variable1 = new CustomVariable(1, 'var1', 'value1');
+        $variable2 = new CustomVariable(1, 'var2', 'value2');
+        $tracker->addCustomVariable($variable1);
+        
+        $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
+        $tracker->addCustomVariable($variable2);
+    }
+
     public function testInvalidIndex()
     {
         $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
         $variable = new CustomVariable('index', 'var1', 'value1');
     }
     
-    public function testScopeIndex()
+    public function testInvalidScope()
     {
         $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
         $variable = new CustomVariable(1, 'var1', 'value1', 'scope');
     }
-
-    
 }

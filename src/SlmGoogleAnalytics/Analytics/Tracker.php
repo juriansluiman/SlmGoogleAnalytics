@@ -154,9 +154,8 @@ class Tracker
         if (null === $this->customVariables) {
             $this->customVariables = array();
         }
-        
+
         $index = $variable->getIndex();
-        
         if (array_key_exists($index, $this->customVariables)) {
             throw new InvalidArgumentException(
                 'Cannot add custom variable with index %d, it already exists',
@@ -164,7 +163,7 @@ class Tracker
             );
         }
         
-        $this->customVariables[] = $variable;
+        $this->customVariables[$index] = $variable;
     }
     
     public function events ()
