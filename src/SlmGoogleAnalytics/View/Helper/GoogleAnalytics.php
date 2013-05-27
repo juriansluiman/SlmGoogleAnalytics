@@ -116,9 +116,20 @@ class GoogleAnalytics extends AbstractHelper
             $script .= "_gaq.push(['_gat._anonymizeIp']);\n";
         }
 
+        if (null !== ($customVariables = $tracker->customVariables())) {
+            foreach ($customVariables as $variable) {
+                $script .= sprintf("_gaq.push(['_setCustomVar', %d, '%s', '%s', %d]);\n",
+                        $variable->getIndex(),
+                        $variable->getName(),
+                        $variable->getValue(),
+                        $variable->getScope());
+            }
+        }
+        
         if ($tracker->enabledPageTracking()) {
             $script .= "_gaq.push(['_trackPageview']);\n";
         }
+        
 
         if (null !== ($events = $tracker->events())) {
             foreach ($events as $event) {
