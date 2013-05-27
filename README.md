@@ -145,11 +145,7 @@ add it to the tracker:
 $index = 1;
 $name  = 'Section';
 $value = 'Life & Style';
-$var   = new SlmGoogleAnalytics\Analytics\CustomVariable(
-    $index,
-    $name,
-    $value
-);
+$var   = new SlmGoogleAnalytics\Analytics\CustomVariable($index, $name, $value);
 
 $ga->addCustomVariable($var);
 ```
@@ -158,12 +154,7 @@ You can, if required, set the scope of the variable:
 
 ```php
 $scope = CustomVariable::SCOPE_SESSION;
-$var   = new SlmGoogleAnalytics\Analytics\CustomVariable(
-    $index,
-    $name,
-    $value,
-    $scope
-);
+$var   = new SlmGoogleAnalytics\Analytics\CustomVariable($index, $name, $value, $scope);
 ```
 
 The scope can be `SCOPE_VISITOR`, `SCOPE_SESSION` or (the default) `SCOPE_PAGE_LEVEL`.
