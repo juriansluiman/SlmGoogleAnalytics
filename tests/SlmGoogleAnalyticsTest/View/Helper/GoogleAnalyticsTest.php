@@ -48,6 +48,7 @@ use SlmGoogleAnalytics\Analytics\Tracker;
 use SlmGoogleAnalytics\View\Helper\GoogleAnalytics as Helper;
 
 use SlmGoogleAnalyticsTest\View\Helper\TestAsset\CustomViewHelper;
+use SlmGoogleAnalytics\Analytics\CustomVariable;
 use SlmGoogleAnalytics\Analytics\Event;
 use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
 use SlmGoogleAnalytics\Analytics\Ecommerce\Item;
@@ -66,8 +67,6 @@ class GoogleAnalyticsTest extends TestCase
 
     public function setUp ()
     {
-        PlaceholderRegistry::unsetRegistry();
-
         $this->tracker = new Tracker(123);
         $this->tracker->setAllowLinker(true);
         $this->helper  = new Helper($this->tracker);
@@ -212,6 +211,34 @@ SCRIPT;
         $this->assertNotContains("_gaq.push(['_gat._anonymizeIp'])", $output);
     }
 
+    public function testHelperRendersCustomVariables()
+    {
+        $variable = new CustomVariable(1, 'var1', 'value1');
+        $this->tracker->addCustomVariable($variable);
+        
+        $helper = $this->helper;
+        $helper();
+        
+        $output = $this->getOutput($this->helper);
+        $this->assertContains("_gaq.push(['_setCustomVar', 1, 'var1', 'value1', 3])", $output);
+    }
+    
+    public function testHelperRendersMultipleCustomVariables()
+    {
+        $variable1 = new CustomVariable(1, 'var1', 'value1');
+        $variable2 = new CustomVariable(2, 'var2', 'value2');
+
+        $this->tracker->addCustomVariable($variable1);
+        $this->tracker->addCustomVariable($variable2);
+    
+        $helper = $this->helper;
+        $helper();
+    
+        $output = $this->getOutput($this->helper);
+        $this->assertContains("_gaq.push(['_setCustomVar', 1, 'var1', 'value1', 3])", $output);
+        $this->assertContains("_gaq.push(['_setCustomVar', 2, 'var2', 'value2', 3])", $output);
+    }
+    
     public function testHelperRendersEvent ()
     {
         $event = new Event('Category', 'Action', 'Label', 'Value');
