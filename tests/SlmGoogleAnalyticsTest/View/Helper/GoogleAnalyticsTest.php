@@ -67,9 +67,6 @@ class GoogleAnalyticsTest extends TestCase
 
     public function setUp ()
     {
-        // Removed this as it causes errors.
-        //PlaceholderRegistry::unsetRegistry();
-
         $this->tracker = new Tracker(123);
         $this->tracker->setAllowLinker(true);
         $this->helper  = new Helper($this->tracker);
