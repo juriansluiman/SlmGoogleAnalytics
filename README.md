@@ -1,8 +1,10 @@
 SlmGoogleAnalytics
 ===
-Version 0.3.0 Created by Jurian Sluiman
 
 [![Build Status](https://secure.travis-ci.org/juriansluiman/SlmGoogleAnalytics.png?branch=master)](http://travis-ci.org/juriansluiman/SlmGoogleAnalytics)
+[![Latest Stable Version](https://poser.pugx.org/slm/google-analytics/v/stable.png)](https://packagist.org/packages/slm/google-analytics)
+
+Created by Jurian Sluiman
 
 **NOTE**: This library recently is renamed to `slm/google-analytics`. If you use
 SlmGoogleAnalytics via composer and/or [packagist.org](http://packagist.org),
