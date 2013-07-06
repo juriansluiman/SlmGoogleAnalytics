@@ -109,7 +109,7 @@ class Module implements
                     }
                     
                     if (true === $config['anonymize_ip']) {
-                        $tracker->setAnonymizeIp($config['anonymize_ip']);
+                        $tracker->setAnonymizeIp(true);
                     }
 
                     if (false === $config['enable']) {
