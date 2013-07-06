@@ -44,6 +44,6 @@ return array(
         'id'           => '',
         'domain_name'  => '',
         'allow_linker' => false,
-        'anonymize_ip' => true,
+        'anonymize_ip' => false,
     ),
 );
