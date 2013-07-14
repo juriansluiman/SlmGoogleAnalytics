@@ -107,6 +107,10 @@ class Module implements
                     if (isset($config['allow_linker'])) {
                         $tracker->setAllowLinker($config['allow_linker']);
                     }
+                    
+                    if (true === $config['anonymize_ip']) {
+                        $tracker->setAnonymizeIp(true);
+                    }
 
                     if (false === $config['enable']) {
                         $tracker->setEnableTracking(false);
