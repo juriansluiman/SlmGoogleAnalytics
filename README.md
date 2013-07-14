@@ -112,7 +112,13 @@ To collect data anonymously, set the flag in the tracker:
 ```php
 $ga->setAnonymizeIp(true);
 ```
-
+Or, alternatively, you can set this flag inside the configuration:
+```php
+'google_analytics' => array(
+    'anonymize_ip' => true,
+),
+```
+More information about what to set in which scenario is available on the [Google Help](https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApi_gat#_gat._anonymizeIp) page.
 ### Tracking multiple domains
 Google Analytics offers to track statistics from multiple domain names. In 
 order to do so, you can set the canonical domain name and optionally allow
