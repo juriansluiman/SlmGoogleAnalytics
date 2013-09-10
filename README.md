@@ -28,7 +28,7 @@ Installation
 ---
 Add "slm/google-analytics" to your composer.json, run an update with
 composer and enable it in your `application.config.php`. Copy the
-`./vendors/SlmGoogleAnalytics/config/slmgoogleanalytics.global.php.dist`
+`./vendor/slm/google-analytics/config/slmgoogleanalytics.global.php.dist`
 to your `./config/autoload/slmgoogleanalytics.global.php`
 and update your web property id there.
 
