@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
@@ -38,7 +37,6 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
-
 namespace SlmGoogleAnalytics;
 
 use Zend\EventManager\EventInterface;
@@ -80,8 +78,8 @@ class Module implements
         return array(
             'factories' => array(
                 'googleAnalytics' => function($sm) {
-                    $tracker = $sm->getServiceLocator()->get('google-analytics');
-                    $helper  = new Helper\GoogleAnalytics($tracker);
+                    $script = $sm->getServiceLocator()->get('google-analytics-script');
+                    $helper = new Helper\GoogleAnalytics($script);
 
                     return $helper;
                 },
@@ -92,10 +90,14 @@ class Module implements
     public function getServiceConfig()
     {
         return array(
-            'aliases'   => array(
+            'aliases'    => array(
                 'google-analytics' => 'SlmGoogleAnalytics\Analytics\Tracker',
             ),
-            'factories' => array(
+            'invokables' => array(
+                'google-analytics-script-analytics-js' => 'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs',
+                'google-analytics-script-ga-js'        => 'SlmGoogleAnalytics\View\Helper\Script\Gajs',
+            ),
+            'factories'  => array(
                 'SlmGoogleAnalytics\Analytics\Tracker' => function($sm) {
                     $config = $sm->get('config');
                     $config = $config['google_analytics'];
@@ -120,6 +122,17 @@ class Module implements
 
                     return $tracker;
                 },
+                'google-analytics-script' => function($sm) {
+                    $config     = $sm->get('config');
+                    $scriptName = $config['google_analytics']['script'];
+
+                    $script = $sm->get($scriptName);
+                    $ga     = $sm->get('google-analytics');
+
+                    $script->setTracker($ga);
+
+                    return $script;
+                },
             ),
         );
     }
@@ -141,9 +154,9 @@ class Module implements
         }
 
         $em->attach(MvcEvent::EVENT_RENDER, function(MvcEvent $e) use ($sm) {
-            $view   = $sm->get('ViewHelperManager');
-            $plugin = $view->get('googleAnalytics');
-            $plugin();
-        });
+                    $view   = $sm->get('ViewHelperManager');
+                    $plugin = $view->get('googleAnalytics');
+                    $plugin();
+                });
     }
 }

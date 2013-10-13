@@ -43,6 +43,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Zend\View\Renderer\PhpRenderer;
 use SlmGoogleAnalytics\Analytics\Tracker;
 use SlmGoogleAnalytics\View\Helper\GoogleAnalytics as Helper;
+use SlmGoogleAnalytics\View\Helper\Script;
 use SlmGoogleAnalyticsTest\View\Helper\TestAsset\CustomViewHelper;
 use SlmGoogleAnalytics\Analytics\CustomVariable;
 use SlmGoogleAnalytics\Analytics\Event;
@@ -65,7 +66,11 @@ class GoogleAnalyticsTest extends TestCase
     {
         $this->tracker = new Tracker(123);
         $this->tracker->setAllowLinker(true);
-        $this->helper  = new Helper($this->tracker);
+
+        $script = new Script\Gajs();
+        $script->setTracker($this->tracker);
+
+        $this->helper  = new Helper($script);
 
         $view = new PhpRenderer;
         $this->helper->setView($view);

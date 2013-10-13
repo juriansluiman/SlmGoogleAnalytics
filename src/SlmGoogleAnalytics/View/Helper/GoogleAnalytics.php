@@ -41,20 +41,10 @@ namespace SlmGoogleAnalytics\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\HeadScript;
-use Zend\Json\Encoder;
-use SlmGoogleAnalytics\Analytics\Tracker;
-use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
 use SlmGoogleAnalytics\Exception\RuntimeException;
 
 class GoogleAnalytics extends AbstractHelper
 {
-    const METHOD_PREFIX = '_';
-
-    /**
-     * @var Tracker
-     */
-    protected $tracker;
-
     /**
      * @var string
      */
@@ -65,9 +55,14 @@ class GoogleAnalytics extends AbstractHelper
      */
     protected $rendered = false;
 
-    public function __construct(Tracker $tracker)
+    /**
+     * @var Script\ScriptInterface
+     */
+    protected $script;
+
+    public function __construct(Script\ScriptInterface $script)
     {
-        $this->tracker = $tracker;
+        $this->script = $script;
     }
 
     public function getContainerName()
@@ -82,6 +77,9 @@ class GoogleAnalytics extends AbstractHelper
 
     public function __invoke()
     {
+        if ($this->rendered) {
+            return;
+        }
         // We need to be sure $container->appendScript() can be called
         $container = $this->view->plugin($this->getContainerName());
         if (!$container instanceof HeadScript) {
@@ -90,7 +88,7 @@ class GoogleAnalytics extends AbstractHelper
             ));
         }
 
-        $script = $this->getScript();
+        $script = $this->script->getScript();
 
         if (empty($script)) {
             return;
@@ -102,169 +100,5 @@ class GoogleAnalytics extends AbstractHelper
         $this->rendered = true;
     }
 
-    public function getScript()
-    {
-        // Do not render the GA twice
-        if ($this->rendered) {
-            return '';
-        }
 
-        // Do not render when tracker is disabled
-        if (!$this->tracker->enabled()) {
-            return '';
-        }
-
-        $script = $this->getVarCreate();
-
-        $script .= $this->prepareSetAccount();
-        $script .= $this->prepareSetDomain();
-        $script .= $this->prepareSetAllowLinker();
-        $script .= $this->prepareAnonymizeIp();
-        $script .= $this->prepareCustomVariables();
-        $script .= $this->prepareEnabledPageTracking();
-        $script .= $this->prepareTrackEvents();
-        $script .= $this->prepareTransactions();
-
-        $script .= $this->getLoadScript();
-
-        return $script;
-    }
-
-    protected function getLoadScript()
-    {
-        return <<<SCRIPT
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();\n
-SCRIPT;
-    }
-
-    protected function getVarCreate()
-    {
-        return 'var _gaq = _gaq || [];'."\n";
-    }
-
-    protected function push($methodName, array $params = array())
-    {
-        array_unshift($params, self::METHOD_PREFIX . $methodName);
-        $jsArray = Encoder::encode($params);
-        $output  = sprintf('_gaq.push(%s);' . "\n", $jsArray);
-
-        return $output;
-    }
-
-    protected function prepareSetAccount()
-    {
-        return $this->push('setAccount', array($this->tracker->getId()));
-    }
-
-    protected function prepareSetDomain()
-    {
-        $domainName = $this->tracker->getDomainName();
-
-        if ($domainName) {
-            return $this->push('setDomainName', array($domainName));
-        }
-        return '';
-    }
-
-    protected function prepareSetAllowLinker()
-    {
-        if ($this->tracker->getAllowLinker()) {
-            return $this->push('setAllowLinker', array(true));
-        }
-        return '';
-    }
-
-    protected function prepareAnonymizeIp()
-    {
-        if ($this->tracker->getAnonymizeIp()) {
-            return $this->push('gat._anonymizeIp');
-        }
-    }
-
-    protected function prepareCustomVariables()
-    {
-        $customVariables = $this->tracker->getCustomVariables();
-        $output          = '';
-
-        foreach ($customVariables as $variable) {
-            $output .= $this->push('setCustomVar', array(
-                $variable->getIndex(),
-                $variable->getName(),
-                $variable->getValue(),
-                $variable->getScope(),
-            ));
-        }
-        return $output;
-    }
-
-    protected function prepareEnabledPageTracking()
-    {
-        if ($this->tracker->enabledPageTracking()) {
-            return $this->push('trackPageview');
-        }
-        return '';
-    }
-
-    protected function prepareTrackEvents()
-    {
-        $events = $this->tracker->getEvents();
-        $output = '';
-
-        foreach ($events as $event) {
-            $output .= $this->push('trackEvent', array(
-                $event->getCategory(),
-                $event->getAction(),
-                $event->getLabel(),
-                $event->getValue(),
-            ));
-        }
-        return $output;
-    }
-
-    protected function prepareTransactions()
-    {
-        $transactions = $this->tracker->getTransactions();
-        $output       = '';
-
-        foreach ($transactions as $transaction) {
-            $output .= $this->push('addTrans', array(
-                $transaction->getId(),
-                $transaction->getAffiliation(),
-                $transaction->getTotal(),
-                $transaction->getTax(),
-                $transaction->getShipping(),
-                $transaction->getCity(),
-                $transaction->getState(),
-                $transaction->getCountry(),
-            ));
-
-            $output .= $this->prepareTransactionItems($transaction);
-        }
-        if ($output !== '') {
-            $output .= $this->push('trackTrans');
-        }
-        return $output;
-    }
-
-    protected function prepareTransactionItems(Transaction $transaction)
-    {
-        $output = '';
-        $items  = $transaction->getItems();
-
-        foreach ($items as $item) {
-            $output .= $this->push('addItem', array(
-                $transaction->getId(),
-                $item->getSku(),
-                $item->getProduct(),
-                $item->getCategory(),
-                $item->getPrice(),
-                $item->getQuantity(),
-            ));
-        }
-        return $output;
-    }
 }

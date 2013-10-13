@@ -32,19 +32,25 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author      Jurian Sluiman <jurian@juriansluiman.nl>
+ * @author      Witold Wasiczko <witold@wasiczko.pl>
  * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @link        http://juriansluiman.nl
+ * @link        http://www.psd2html.pl
  */
+namespace SlmGoogleAnalytics\View\Helper\Script;
 
-return array(
-    'google_analytics' => array(
-        'enable'       => true,
-        'id'           => '',
-        'domain_name'  => '',
-        'allow_linker' => false,
-        'anonymize_ip' => false,
-        'script'       => 'google-analytics-script-ga-js',
-    ),
-);
+use SlmGoogleAnalytics\Analytics\Tracker;
+class Analyticsjs implements ScriptInterface
+{
+    protected $tracker;
+
+    public function getScript()
+    {
+
+    }
+
+    public function setTracker(Tracker $tracker)
+    {
+        $this->tracker = $tracker;
+    }
+}
