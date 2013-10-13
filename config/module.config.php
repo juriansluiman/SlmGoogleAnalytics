@@ -47,4 +47,22 @@ return array(
         'anonymize_ip' => false,
         'script'       => 'google-analytics-script-ga-js',
     ),
+    'service_manager'  => array(
+        'aliases'    => array(
+            'google-analytics' => 'SlmGoogleAnalytics\Analytics\Tracker',
+        ),
+        'invokables' => array(
+            'google-analytics-script-analytics-js' => 'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs',
+            'google-analytics-script-ga-js'        => 'SlmGoogleAnalytics\View\Helper\Script\Gajs',
+        ),
+        'factories'  => array(
+            'SlmGoogleAnalytics\Analytics\Tracker' => 'SlmGoogleAnalytics\Service\TrackerFactory',
+            'google-analytics-script'              => 'SlmGoogleAnalytics\Service\ScriptFactory',
+        ),
+    ),
+    'view_helpers'     => array(
+        'factories' => array(
+            'googleAnalytics' => 'SlmGoogleAnalytics\Service\GoogleAnalyticsFactory',
+        ),
+    )
 );

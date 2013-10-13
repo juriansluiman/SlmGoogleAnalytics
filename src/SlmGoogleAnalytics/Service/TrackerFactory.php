@@ -32,64 +32,43 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author      Jurian Sluiman <jurian@juriansluiman.nl>
+ * @author      Witold Wasiczko <witold@wasiczko.pl>
  * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @link        http://juriansluiman.nl
+ * @link        http://www.psd2html.pl
  */
-namespace SlmGoogleAnalytics;
+namespace SlmGoogleAnalytics\Service;
 
-use Zend\EventManager\EventInterface;
-use Zend\Http\Request as HttpRequest;
-use Zend\ModuleManager\Feature;
-use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use SlmGoogleAnalytics\Analytics\Tracker;
 
-class Module implements
-    Feature\AutoloaderProviderInterface,
-    Feature\ConfigProviderInterface,
-    Feature\BootstrapListenerInterface
+class TrackerFactory implements FactoryInterface
 {
 
-    public function getAutoloaderConfig()
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
-                __DIR__ . '/autoload_classmap.php',
-            ),
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
-    }
+        $config = $serviceLocator->get('config');
+        $gaConfig = $config['google_analytics'];
 
-    public function getConfig()
-    {
-        return include __DIR__ . '/config/module.config.php';
-    }
+        $tracker = new Tracker($gaConfig['id']);
 
-    /**
-     * When the render event is triggered, we invoke the view helper to
-     * render the javascript code.
-     *
-     * @param MvcEvent $e
-     */
-    public function onBootstrap(EventInterface $e)
-    {
-        $app = $e->getParam('application');
-
-        if (!$app->getRequest() instanceof HttpRequest) {
-            return;
+        if (isset($gaConfig['domain_name'])) {
+            $tracker->setDomainName($gaConfig['domain_name']);
         }
 
-        $sm = $app->getServiceManager();
-        $em = $app->getEventManager();
+        if (isset($gaConfig['allow_linker'])) {
+            $tracker->setAllowLinker($gaConfig['allow_linker']);
+        }
 
-        $em->attach(MvcEvent::EVENT_RENDER, function(MvcEvent $e) use ($sm) {
-            $view   = $sm->get('ViewHelperManager');
-            $plugin = $view->get('googleAnalytics');
-            $plugin->appendScript();
-        });
+        if (true === $gaConfig['anonymize_ip']) {
+            $tracker->setAnonymizeIp(true);
+        }
+
+        if (false === $gaConfig['enable']) {
+            $tracker->setEnableTracking(false);
+        }
+
+        return $tracker;
     }
 }
