@@ -77,11 +77,17 @@ class GoogleAnalytics extends AbstractHelper
 
     public function __invoke()
     {
+        return $this;
+    }
+
+    public function appendScript()
+    {
         if ($this->rendered) {
             return;
         }
+
         // We need to be sure $container->appendScript() can be called
-        $container = $this->view->plugin($this->getContainerName());
+        $container = $this->getContainer();
         if (!$container instanceof HeadScript) {
             throw new RuntimeException(sprintf(
                     'Container %s does not extend HeadScript view helper', $this->getContainerName()
@@ -98,7 +104,15 @@ class GoogleAnalytics extends AbstractHelper
 
         // Mark this GA as rendered
         $this->rendered = true;
+
+        return $this;
     }
 
+    protected function getContainer()
+    {
+        $containerName = $this->getContainerName();
+        $container     = $this->view->plugin($containerName);
 
+        return $container;
+    }
 }

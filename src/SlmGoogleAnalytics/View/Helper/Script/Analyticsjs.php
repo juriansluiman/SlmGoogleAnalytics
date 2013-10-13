@@ -39,18 +39,253 @@
  */
 namespace SlmGoogleAnalytics\View\Helper\Script;
 
+use Zend\Json\Json;
 use SlmGoogleAnalytics\Analytics\Tracker;
+use SlmGoogleAnalytics\Analytics\Ecommerce\Item;
+use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
+
 class Analyticsjs implements ScriptInterface
 {
+    const DEFAULT_FUNCTION_NAME = 'ga';
+
     protected $tracker;
-
-    public function getScript()
-    {
-
-    }
+    protected $function      = self::DEFAULT_FUNCTION_NAME;
+    protected $loadedPlugins = array();
 
     public function setTracker(Tracker $tracker)
     {
         $this->tracker = $tracker;
+    }
+
+    protected function callGa(array $params)
+    {
+        $jsArray         = Json::encode($params);
+        $jsArrayAsParams = substr($jsArray, 1, -1);
+        $output          = sprintf("\n" . '%s(%s);', $this->getFunctionName(), $jsArrayAsParams);
+
+        return $output;
+    }
+
+    public function getScript()
+    {
+        // Do not render when tracker is disabled
+        if (!$this->tracker->enabled()) {
+            return '';
+        }
+
+        $script = $this->getLoadScript();
+
+        $script .= $this->prepareCreate();
+        $script .= $this->prepareLinker();
+        $script .= $this->prepareTrackEvents();
+        $script .= $this->prepareTransactions();
+        $script .= $this->prepareSend();
+
+        return $script;
+    }
+
+    public function setFunctionName($name)
+    {
+        $this->function = $name;
+    }
+
+    public function getFunctionName()
+    {
+        return $this->function;
+    }
+
+    protected function getLoadScript()
+    {
+        $script = <<<SCRIPT
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','%s');
+SCRIPT;
+
+        return sprintf($script, $this->getFunctionName());
+    }
+
+    protected function requirePlugin($name, $scriptName = null)
+    {
+        $output = '';
+
+        if (array_search($name, $this->loadedPlugins) === false) {
+            $params = array(
+                'require',
+                $name,
+            );
+
+            if ($scriptName !== null) {
+                $params[] = $scriptName;
+            }
+
+            $output = $this->callGa($params);
+        }
+        return $output;
+    }
+
+    protected function prepareCreate()
+    {
+        $parameters = array();
+        $params     = array(
+            'create',
+            $this->tracker->getId(),
+        );
+
+
+        if ($this->tracker->getAllowLinker()) {
+            $parameters['allowLinker'] = true;
+        }
+
+        if ($this->tracker->getAnonymizeIp()) {
+            $parameters['anonymizeIp'] = true;
+        }
+
+        if (count($parameters) > 0) {
+            $params[] = $parameters;
+        }
+
+        return $this->callGa($params);
+    }
+
+    protected function prepareSend()
+    {
+        if (!$this->tracker->enabledPageTracking()) {
+            return '';
+        }
+
+        $parameters = array();
+        $params     = array(
+            'send',
+            'pageview',
+        );
+
+        $customVariables = $this->tracker->getCustomVariables();
+
+        if (count($customVariables) > 0) {
+            foreach ($customVariables as $customVariable) {
+                $index = $customVariable->getIndex();
+                $key   = 'dimension' . $index;
+                $value = $customVariable->getValue();
+
+                $parameters[$key] = $value;
+            }
+        }
+
+        if (count($parameters) > 0) {
+            $params[] = $parameters;
+        }
+
+        return $this->callGa($params);
+    }
+
+    protected function prepareLinker()
+    {
+        $domainName = $this->tracker->getDomainName();
+        $output     = '';
+
+        if ($domainName) {
+            $output .= $this->requirePlugin('linker');
+
+            $params = array(
+                'linker:autoLink',
+                array($domainName),
+            );
+
+            $output .= $this->callGa($params);
+        }
+        return $output;
+    }
+
+    protected function prepareTrackEvents()
+    {
+        $events = $this->tracker->getEvents();
+        $output = '';
+
+        foreach ($events as $event) {
+            $output .= $this->prepareTrackEvent($event);
+        }
+        return $output;
+    }
+
+    protected function prepareTrackEvent(\SlmGoogleAnalytics\Analytics\Event $event)
+    {
+        $params = array(
+            'send',
+            'event',
+            $event->getCategory(),
+            $event->getAction(),
+            $event->getLabel(),
+            $event->getValue(),
+        );
+
+        return $this->callGa($params);
+    }
+
+    protected function prepareTransactions()
+    {
+        $transactions = $this->tracker->getTransactions();
+        $output       = '';
+
+        $hasTransactions = count($transactions) > 0;
+
+        if ($hasTransactions) {
+            $output .= $this->requirePlugin('ecommerce', 'ecommerce.js');
+        }
+
+        foreach ($transactions as $transaction) {
+            $output .= $this->prepareTransaction($transaction);
+            $output .= $this->prepareTransactionItems($transaction);
+        }
+
+        if ($hasTransactions) {
+            $output .= $this->callGa(array('ecommerce:send'));
+        }
+        return $output;
+    }
+
+    protected function prepareTransaction(Transaction $transaction)
+    {
+        $params = array(
+            'ecommerce:addTransaction',
+            array(
+                'id'          => $transaction->getId(),
+                'affiliation' => $transaction->getAffiliation(),
+                'revenue'     => $transaction->getTotal(),
+                'shipping'    => $transaction->getItems(),
+                'tax'         => $transaction->getTax(),
+            ),
+        );
+
+        return $this->callGa($params);
+    }
+
+    protected function prepareTransactionItems(Transaction $transaction)
+    {
+        $output = '';
+        $items  = $transaction->getItems();
+
+        foreach ($items as $item) {
+            $output .= $this->prepareTransactionItem($transaction, $item);
+        }
+        return $output;
+    }
+
+    protected function prepareTransactionItem(Transaction $transaction, Item $item)
+    {
+        $params = array(
+            'ecommerce:addItem',
+            array(
+                'id'       => $transaction->getId(),
+                'name'     => $item->getProduct(),
+                'sku'      => $item->getSku(),
+                'category' => $item->getCategory(),
+                'price'    => $item->getPrice(),
+                'quantity' => $item->getQuantity(),
+            ),
+        );
+
+        return $this->callGa($params);
     }
 }

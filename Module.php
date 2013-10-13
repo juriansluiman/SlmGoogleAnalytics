@@ -47,11 +47,7 @@ use SlmGoogleAnalytics\Analytics;
 use SlmGoogleAnalytics\View\Helper;
 
 class Module implements
-    Feature\AutoloaderProviderInterface,
-    Feature\ConfigProviderInterface,
-    Feature\ViewHelperProviderInterface,
-    Feature\ServiceProviderInterface,
-    Feature\BootstrapListenerInterface
+Feature\AutoloaderProviderInterface, Feature\ConfigProviderInterface, Feature\ViewHelperProviderInterface, Feature\ServiceProviderInterface, Feature\BootstrapListenerInterface
 {
 
     public function getAutoloaderConfig()
@@ -146,17 +142,18 @@ class Module implements
     public function onBootstrap(EventInterface $e)
     {
         $app = $e->getParam('application');
-        $sm  = $app->getServiceManager();
-        $em  = $app->getEventManager();
 
         if (!$app->getRequest() instanceof HttpRequest) {
             return;
         }
 
+        $sm = $app->getServiceManager();
+        $em = $app->getEventManager();
+
         $em->attach(MvcEvent::EVENT_RENDER, function(MvcEvent $e) use ($sm) {
-                    $view   = $sm->get('ViewHelperManager');
-                    $plugin = $view->get('googleAnalytics');
-                    $plugin();
-                });
+            $view   = $sm->get('ViewHelperManager');
+            $plugin = $view->get('googleAnalytics');
+            $plugin->appendScript();
+        });
     }
 }
