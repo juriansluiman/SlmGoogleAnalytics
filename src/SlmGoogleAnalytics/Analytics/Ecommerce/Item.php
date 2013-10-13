@@ -44,10 +44,10 @@ class Item
     protected $sku;
     protected $price;
     protected $quantity;
-    protected $product;
-    protected $category;
+    protected $product  = '';
+    protected $category = '';
 
-    public function __construct ($sku, $price, $quantity, $product = null, $category = null)
+    public function __construct($sku, $price, $quantity, $product = null, $category = null)
     {
         $this->setSku($sku);
         $this->setPrice($price);
@@ -62,52 +62,52 @@ class Item
         }
     }
 
-    public function getSku ()
+    public function getSku()
     {
         return $this->sku;
     }
 
-    public function setSku ($sku)
+    public function setSku($sku)
     {
         $this->sku = $sku;
     }
 
-    public function getProduct ()
+    public function getProduct()
     {
         return $this->product;
     }
 
-    public function setProduct ($product)
+    public function setProduct($product)
     {
         $this->product = $product;
     }
 
-    public function getCategory ()
+    public function getCategory()
     {
         return $this->category;
     }
 
-    public function setCategory ($category)
+    public function setCategory($category)
     {
         $this->category = $category;
     }
 
-    public function getPrice ()
+    public function getPrice()
     {
         return $this->price;
     }
 
-    public function setPrice ($price)
+    public function setPrice($price)
     {
         $this->price = $price;
     }
 
-    public function getQuantity ()
+    public function getQuantity()
     {
         return $this->quantity;
     }
 
-    public function setQuantity ($quantity)
+    public function setQuantity($quantity)
     {
         $this->quantity = $quantity;
     }

@@ -45,7 +45,8 @@ use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
 
 class TransactionTest extends TestCase
 {
-    public function testCanInstantiateTransaction ()
+
+    public function testCanInstantiateTransaction()
     {
         $transaction = new Transaction(123, 12.50);
 
@@ -53,17 +54,17 @@ class TransactionTest extends TestCase
         $this->assertEquals(12.50, $transaction->getTotal());
     }
 
-    public function testCanAddTransactionToTracker ()
+    public function testCanAddTransactionToTracker()
     {
         $tracker     = new Tracker(123);
         $transaction = new Transaction(123, 12.50);
         $tracker->addTransaction($transaction);
 
-        $transactions = count($tracker->transactions());
+        $transactions = count($tracker->getTransactions());
         $this->assertEquals(1, $transactions);
     }
 
-    public function testCanAddMultipleTransactionsToTracker ()
+    public function testCanAddMultipleTransactionsToTracker()
     {
         $tracker      = new Tracker(123);
         $transaction1 = new Transaction(123, 12.50);
@@ -71,11 +72,11 @@ class TransactionTest extends TestCase
         $tracker->addTransaction($transaction1);
         $tracker->addTransaction($transaction2);
 
-        $transactions = count($tracker->transactions());
+        $transactions = count($tracker->getTransactions());
         $this->assertEquals(2, $transactions);
     }
 
-    public function testCannotAddTransactionsWithSameId ()
+    public function testCannotAddTransactionsWithSameId()
     {
         $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
 

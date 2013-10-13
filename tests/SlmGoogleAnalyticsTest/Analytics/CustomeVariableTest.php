@@ -42,10 +42,11 @@ use SlmGoogleAnalytics\Analytics\CustomVariable;
 
 class CustomeVariableTest extends TestCase
 {
+
     public function testCanInstantiateCustomeVariable()
     {
         $variable = new CustomVariable(1, 'var1', 'value1');
-        
+
         $this->assertEquals(1, $variable->getIndex());
         $this->assertEquals('var1', $variable->getName());
         $this->assertEquals('value1', $variable->getValue());
@@ -54,31 +55,31 @@ class CustomeVariableTest extends TestCase
 
     public function testCanAddCustomeVariableToTrack()
     {
-        $tracker = new Tracker(123);
+        $tracker  = new Tracker(123);
         $variable = new CustomVariable(1, 'var1', 'value1');
         $tracker->addCustomVariable($variable);
 
-        $this->assertCount(1, $tracker->customVariables());
+        $this->assertCount(1, $tracker->getCustomVariables());
     }
 
     public function testCanAddMultipleCustomVariablesToTracker()
     {
-        $tracker = new Tracker(123);
+        $tracker   = new Tracker(123);
         $variable1 = new CustomVariable(1, 'var1', 'value1');
         $variable2 = new CustomVariable(2, 'var2', 'value2');
         $tracker->addCustomVariable($variable1);
         $tracker->addCustomVariable($variable2);
 
-        $this->assertCount(2, $tracker->customVariables());
+        $this->assertCount(2, $tracker->getCustomVariables());
     }
 
     public function testAddCustomVariablesWithSameId()
     {
-        $tracker = new Tracker(123);
+        $tracker   = new Tracker(123);
         $variable1 = new CustomVariable(1, 'var1', 'value1');
         $variable2 = new CustomVariable(1, 'var2', 'value2');
         $tracker->addCustomVariable($variable1);
-        
+
         $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
         $tracker->addCustomVariable($variable2);
     }
@@ -88,7 +89,7 @@ class CustomeVariableTest extends TestCase
         $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
         $variable = new CustomVariable('index', 'var1', 'value1');
     }
-    
+
     public function testInvalidScope()
     {
         $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
@@ -37,13 +38,13 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
+
 namespace SlmGoogleAnalytics;
 
 use Zend\EventManager\EventInterface;
 use Zend\Http\Request as HttpRequest;
 use Zend\ModuleManager\Feature;
 use Zend\Mvc\MvcEvent;
-
 use SlmGoogleAnalytics\Analytics;
 use SlmGoogleAnalytics\View\Helper;
 
@@ -54,6 +55,7 @@ class Module implements
     Feature\ServiceProviderInterface,
     Feature\BootstrapListenerInterface
 {
+
     public function getAutoloaderConfig()
     {
         return array(
@@ -90,7 +92,7 @@ class Module implements
     public function getServiceConfig()
     {
         return array(
-            'aliases' => array(
+            'aliases'   => array(
                 'google-analytics' => 'SlmGoogleAnalytics\Analytics\Tracker',
             ),
             'factories' => array(
@@ -107,7 +109,7 @@ class Module implements
                     if (isset($config['allow_linker'])) {
                         $tracker->setAllowLinker($config['allow_linker']);
                     }
-                    
+
                     if (true === $config['anonymize_ip']) {
                         $tracker->setAnonymizeIp(true);
                     }

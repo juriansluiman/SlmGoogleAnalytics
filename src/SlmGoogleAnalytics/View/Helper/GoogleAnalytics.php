@@ -41,8 +41,9 @@ namespace SlmGoogleAnalytics\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\HeadScript;
+use Zend\Json\Encoder;
 use SlmGoogleAnalytics\Analytics\Tracker;
-
+use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
 use SlmGoogleAnalytics\Exception\RuntimeException;
 
 class GoogleAnalytics extends AbstractHelper
@@ -62,124 +63,200 @@ class GoogleAnalytics extends AbstractHelper
      */
     protected $rendered = false;
 
-    public function __construct (Tracker $tracker)
+    public function __construct(Tracker $tracker)
     {
         $this->tracker = $tracker;
     }
 
-    public function getContainer ()
+    public function getContainerName()
     {
         return $this->container;
     }
 
-    public function setContainer ($container)
+    public function setContainer($container)
     {
         $this->container = $container;
     }
 
-    public function __invoke ()
+    public function __invoke()
     {
-        // Do not render the GA twice
-        if  ($this->rendered) {
-            return;
-        }
-
-        // Do not render when tracker is disabled
-        $tracker = $this->tracker;
-        if (!$tracker->enabled()) {
-            return;
-        }
-
         // We need to be sure $container->appendScript() can be called
-        $container = $this->view->plugin($this->getContainer());
+        $container = $this->view->plugin($this->getContainerName());
         if (!$container instanceof HeadScript) {
             throw new RuntimeException(sprintf(
-                'Container %s does not extend HeadScript view helper',
-                 $this->getContainer()
+                    'Container %s does not extend HeadScript view helper', $this->getContainerName()
             ));
         }
 
-        $script  = "var _gaq = _gaq || [];\n";
-        $script .= sprintf("_gaq.push(['_setAccount', '%s']);\n",
-                           $tracker->getId());
+        $script = $this->getScript();
 
-        if ($tracker->getDomainName()) {
-            $script .= sprintf("_gaq.push(['_setDomainName', '%s']);\n",
-                               $tracker->getDomainName());;
+        if (empty($script)) {
+            return;
         }
 
-        if ($tracker->getAllowLinker()) {
-            $script .= "_gaq.push(['_setAllowLinker', true]);\n";
+        $container->appendScript($script);
+
+        // Mark this GA as rendered
+        $this->rendered = true;
+    }
+
+    public function getScript()
+    {
+        // Do not render the GA twice
+        if ($this->rendered) {
+            return '';
         }
 
-        if ($tracker->getAnonymizeIp()) {
-            $script .= "_gaq.push(['_gat._anonymizeIp']);\n";
+        // Do not render when tracker is disabled
+        if (!$this->tracker->enabled()) {
+            return '';
         }
 
-        if (null !== ($customVariables = $tracker->customVariables())) {
-            foreach ($customVariables as $variable) {
-                $script .= sprintf("_gaq.push(['_setCustomVar', %d, '%s', '%s', %d]);\n",
-                        $variable->getIndex(),
-                        $variable->getName(),
-                        $variable->getValue(),
-                        $variable->getScope());
-            }
-        }
-        
-        if ($tracker->enabledPageTracking()) {
-            $script .= "_gaq.push(['_trackPageview']);\n";
-        }
-        
+        $script = "var _gaq = _gaq || [];\n";
 
-        if (null !== ($events = $tracker->events())) {
-            foreach ($events as $event) {
-                $script .= sprintf("_gaq.push(['_trackEvent', '%s', '%s', '%s', '%s']);\n",
-                                   $event->getCategory(),
-                                   $event->getAction(),
-                                   $event->getLabel() ?: '',
-                                   $event->getValue() ?: '');
-            }
-        }
+        $script .= $this->prepareSetAccount();
+        $script .= $this->prepareSetDomain();
+        $script .= $this->prepareSetAllowLinker();
+        $script .= $this->prepareAnonymizeIp();
+        $script .= $this->prepareCustomVariables();
+        $script .= $this->prepareEnabledPageTracking();
+        $script .= $this->prepareTrackEvents();
+        $script .= $this->prepareTransactions();
 
-        if (null !== ($transactions = $tracker->transactions())) {
-            foreach ($transactions as $transaction) {
-                $script .= sprintf("_gaq.push(['_addTrans', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s']);\n",
-                                   $transaction->getId(),
-                                   $transaction->getAffiliation() ?: '',
-                                   $transaction->getTotal(),
-                                   $transaction->getTax() ?: '',
-                                   $transaction->getShipping() ?: '',
-                                   $transaction->getCity() ?: '',
-                                   $transaction->getState() ?: '',
-                                   $transaction->getCountry() ?: '');
+        $script .= $this->getLoadScript();
 
-                if (null !== ($items = $transaction->items())) {
-                    foreach ($items as $item) {
-                        $script .= sprintf("_gaq.push(['_addItem', '%s', '%s', '%s', '%s', '%s', '%s']);\n",
-                                           $transaction->getId(),
-                                           $item->getSku() ?: '',
-                                           $item->getProduct() ?: '',
-                                           $item->getCategory() ?: '',
-                                           $item->getPrice(),
-                                           $item->getQuantity());
-                    }
-                }
-            }
+        return $script;
+    }
 
-            $script .= "_gaq.push(['_trackTrans']);";
-        }
-
-        $script .= <<<SCRIPT
+    protected function getLoadScript()
+    {
+        return <<<SCRIPT
 (function() {
   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();\n
 SCRIPT;
+    }
 
-        $container->appendScript($script);
+    protected function push($methodName, array $params = array())
+    {
+        array_unshift($params, '_'. $methodName);
+        $jsArray = Encoder::encode($params);
+        $output  = sprintf('_gaq.push(%s);' . "\n", $jsArray);
 
-        // Mark this GA as rendered
-        $this->rendered = true;
+        return $output;
+    }
+
+    protected function prepareSetAccount()
+    {
+        return $this->push('setAccount', array($this->tracker->getId()));
+    }
+
+    protected function prepareSetDomain()
+    {
+        $domainName = $this->tracker->getDomainName();
+
+        if ($domainName) {
+            return $this->push('setDomainName', array($domainName));
+        }
+        return '';
+    }
+
+    protected function prepareSetAllowLinker()
+    {
+        if ($this->tracker->getAllowLinker()) {
+            return $this->push('setAllowLinker', array(true));
+        }
+        return '';
+    }
+
+    protected function prepareAnonymizeIp()
+    {
+        if ($this->tracker->getAnonymizeIp()) {
+            return $this->push('gat._anonymizeIp');
+        }
+    }
+
+    protected function prepareCustomVariables()
+    {
+        $customVariables = $this->tracker->getCustomVariables();
+        $output          = '';
+
+        foreach ($customVariables as $variable) {
+            $output .= $this->push('setCustomVar', array(
+                $variable->getIndex(),
+                $variable->getName(),
+                $variable->getValue(),
+                $variable->getScope(),
+            ));
+        }
+        return $output;
+    }
+
+    protected function prepareEnabledPageTracking()
+    {
+        if ($this->tracker->enabledPageTracking()) {
+            return $this->push('trackPageview');
+        }
+        return '';
+    }
+
+    protected function prepareTrackEvents()
+    {
+        $events = $this->tracker->getEvents();
+        $output = '';
+
+        foreach ($events as $event) {
+            $output .= $this->push('trackEvent', array(
+                $event->getCategory(),
+                $event->getAction(),
+                $event->getLabel(),
+                $event->getValue(),
+            ));
+        }
+        return $output;
+    }
+
+    protected function prepareTransactions()
+    {
+        $transactions = $this->tracker->getTransactions();
+        $output       = '';
+
+        foreach ($transactions as $transaction) {
+            $output .= $this->push('addTrans', array(
+                $transaction->getId(),
+                $transaction->getAffiliation(),
+                $transaction->getTotal(),
+                $transaction->getTax(),
+                $transaction->getShipping(),
+                $transaction->getCity(),
+                $transaction->getState(),
+                $transaction->getCountry(),
+            ));
+
+            $output .= $this->prepareTransactionItems($transaction);
+        }
+        $output .= $this->push('trackTrans');
+
+        return $output;
+    }
+
+    protected function prepareTransactionItems(Transaction $transaction)
+    {
+        $output = '';
+        $items  = $transaction->getItems();
+
+        foreach ($items as $item) {
+            $output .= $this->push('addItem', array(
+                $transaction->getId(),
+                $item->getSku(),
+                $item->getProduct(),
+                $item->getCategory(),
+                $item->getPrice(),
+                $item->getQuantity(),
+            ));
+        }
+        return $output;
     }
 }

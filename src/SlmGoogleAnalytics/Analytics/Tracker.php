@@ -59,49 +59,45 @@ class Tracker
      * @var bool
      */
     protected $enableTracking = true;
-
     protected $enablePageTracking = true;
-
     protected $allowLinker = false;
     protected $domainName;
-
     protected $anonymizeIp = false;
+    protected $customVariables = array();
+    protected $events          = array();
+    protected $transactions    = array();
 
-    protected $customVariables;
-    protected $events;
-    protected $transactions;
-
-    public function __construct ($id)
+    public function __construct($id)
     {
         $this->setId($id);
     }
 
-    public function getId ()
+    public function getId()
     {
         return $this->id;
     }
 
-    public function setId ($id)
+    public function setId($id)
     {
         $this->id = $id;
     }
 
-    public function enabled ()
+    public function enabled()
     {
         return $this->enableTracking;
     }
 
-    public function setEnableTracking ($enable_tracking = true)
+    public function setEnableTracking($enable_tracking = true)
     {
         $this->enableTracking = (bool) $enable_tracking;
     }
 
-    public function enabledPageTracking ()
+    public function enabledPageTracking()
     {
         return $this->enablePageTracking;
     }
 
-    public function setEnablePageTracking ($enable_page_tracking = true)
+    public function setEnablePageTracking($enable_page_tracking = true)
     {
         $this->enablePageTracking = (bool) $enable_page_tracking;
     }
@@ -144,58 +140,44 @@ class Tracker
         $this->anonymizeIp = (bool) $flag;
     }
 
-    public function customVariables()
+    public function getCustomVariables()
     {
         return $this->customVariables;
     }
-    
+
     public function addCustomVariable(CustomVariable $variable)
     {
-        if (null === $this->customVariables) {
-            $this->customVariables = array();
-        }
-
         $index = $variable->getIndex();
         if (array_key_exists($index, $this->customVariables)) {
             throw new InvalidArgumentException(
-                'Cannot add custom variable with index %d, it already exists',
-                $index
+            'Cannot add custom variable with index %d, it already exists', $index
             );
         }
-        
+
         $this->customVariables[$index] = $variable;
     }
-    
-    public function events ()
+
+    public function getEvents()
     {
         return $this->events;
     }
 
-    public function addEvent (Event $event)
+    public function addEvent(Event $event)
     {
-        if (null === $this->events) {
-            $this->events = array();
-        }
-
         $this->events[] = $event;
     }
 
-    public function transactions ()
+    public function getTransactions()
     {
         return $this->transactions;
     }
 
-    public function addTransaction (Transaction $transaction)
+    public function addTransaction(Transaction $transaction)
     {
-        if (null === $this->transactions) {
-            $this->transactions = array();
-        }
-
         $id = $transaction->getId();
         if (array_key_exists($id, $this->transactions)) {
             throw new InvalidArgumentException(sprintf(
-                'Cannot add transaction with id %s, it already exists',
-                $id
+                    'Cannot add transaction with id %s, it already exists', $id
             ));
         }
 
