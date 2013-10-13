@@ -48,6 +48,8 @@ use SlmGoogleAnalytics\Exception\RuntimeException;
 
 class GoogleAnalytics extends AbstractHelper
 {
+    const METHOD_PREFIX = '_';
+
     /**
      * @var Tracker
      */
@@ -112,7 +114,7 @@ class GoogleAnalytics extends AbstractHelper
             return '';
         }
 
-        $script = "var _gaq = _gaq || [];\n";
+        $script = $this->getVarCreate();
 
         $script .= $this->prepareSetAccount();
         $script .= $this->prepareSetDomain();
@@ -139,9 +141,14 @@ class GoogleAnalytics extends AbstractHelper
 SCRIPT;
     }
 
+    protected function getVarCreate()
+    {
+        return 'var _gaq = _gaq || [];'."\n";
+    }
+
     protected function push($methodName, array $params = array())
     {
-        array_unshift($params, '_'. $methodName);
+        array_unshift($params, self::METHOD_PREFIX . $methodName);
         $jsArray = Encoder::encode($params);
         $output  = sprintf('_gaq.push(%s);' . "\n", $jsArray);
 
@@ -237,8 +244,9 @@ SCRIPT;
 
             $output .= $this->prepareTransactionItems($transaction);
         }
-        $output .= $this->push('trackTrans');
-
+        if ($output !== '') {
+            $output .= $this->push('trackTrans');
+        }
         return $output;
     }
 
