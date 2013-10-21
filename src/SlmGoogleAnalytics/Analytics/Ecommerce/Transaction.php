@@ -42,14 +42,14 @@ namespace SlmGoogleAnalytics\Analytics\Ecommerce;
 class Transaction
 {
     protected $id;
-    protected $affiliation = '';
-    protected $total       = '';
-    protected $tax         = '';
-    protected $shipping    = '';
-    protected $city        = '';
-    protected $state       = '';
-    protected $country     = '';
-    protected $items       = array();
+    protected $affiliation;
+    protected $total;
+    protected $tax;
+    protected $shipping;
+    protected $city;
+    protected $state;
+    protected $country;
+    protected $items = array();
 
     public function __construct($id, $total)
     {

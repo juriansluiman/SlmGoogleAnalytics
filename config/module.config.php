@@ -45,19 +45,21 @@ return array(
         'domain_name'  => '',
         'allow_linker' => false,
         'anonymize_ip' => false,
-        'script'       => 'google-analytics-script-ga-js',
+        'script'       => 'google-analytics-ga',
     ),
     'service_manager'  => array(
         'aliases'    => array(
-            'google-analytics' => 'SlmGoogleAnalytics\Analytics\Tracker',
+            'google-analytics'           => 'SlmGoogleAnalytics\Analytics\Tracker',
+            'google-analytics-universal' => 'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs',
+            'google-analytics-ga'        => 'SlmGoogleAnalytics\View\Helper\Script\Gajs',
         ),
         'invokables' => array(
-            'google-analytics-script-analytics-js' => 'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs',
-            'google-analytics-script-ga-js'        => 'SlmGoogleAnalytics\View\Helper\Script\Gajs',
+            'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs' => 'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs',
+            'SlmGoogleAnalytics\View\Helper\Script\Gajs'        => 'SlmGoogleAnalytics\View\Helper\Script\Gajs',
         ),
         'factories'  => array(
-            'SlmGoogleAnalytics\Analytics\Tracker' => 'SlmGoogleAnalytics\Service\TrackerFactory',
-            'google-analytics-script'              => 'SlmGoogleAnalytics\Service\ScriptFactory',
+            'SlmGoogleAnalytics\Analytics\Tracker'     => 'SlmGoogleAnalytics\Service\TrackerFactory',
+            'SlmGoogleAnalytics\Service\ScriptFactory' => 'SlmGoogleAnalytics\Service\ScriptFactory',
         ),
     ),
     'view_helpers'     => array(

@@ -44,12 +44,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ScriptFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config     = $serviceLocator->get('config');
         $scriptName = $config['google_analytics']['script'];
-
 
         $script = $serviceLocator->get($scriptName);
         /* @var $script \SlmGoogleAnalytics\View\Helper\Script\ScriptInterface */

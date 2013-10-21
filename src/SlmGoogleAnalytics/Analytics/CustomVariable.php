@@ -60,11 +60,10 @@ class CustomVariable
     public function setIndex($index)
     {
         if (!is_int($index)) {
-            throw new InvalidArgumentException(
-            sprintf(
-                    'Index must be of type integer, %s given', gettype($index)
-            )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Index must be of type integer, %s given',
+                gettype($index)
+            ));
         }
 
         $this->index = $index;
@@ -104,11 +103,10 @@ class CustomVariable
         );
 
         if (!in_array($scope, $allowed, true)) {
-            throw new InvalidArgumentException(
-            sprintf(
-                    'Invalid value given for scope. Acceptable values are: %s.', implode(', ', $allowed)
-            )
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Invalid value given for scope. Acceptable values are: %s.',
+                implode(', ', $allowed)
+            ));
         }
 
         $this->scope = $scope;

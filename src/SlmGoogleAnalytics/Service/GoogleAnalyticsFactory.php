@@ -48,7 +48,7 @@ class GoogleAnalyticsFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $sm = $serviceLocator->getServiceLocator();
-        $script = $sm->get('google-analytics-script');
+        $script = $sm->get('SlmGoogleAnalytics\Service\ScriptFactory');
         $helper = new GoogleAnalytics($script);
 
         return $helper;

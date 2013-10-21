@@ -75,6 +75,14 @@ class GoogleAnalytics extends AbstractHelper
         $this->containerName = $container;
     }
 
+    protected function getContainer()
+    {
+        $containerName = $this->getContainerName();
+        $container     = $this->view->plugin($containerName);
+
+        return $container;
+    }
+
     public function __invoke()
     {
         return $this;
@@ -82,6 +90,7 @@ class GoogleAnalytics extends AbstractHelper
 
     public function appendScript()
     {
+        // Do not render the GA twice
         if ($this->rendered) {
             return;
         }
@@ -90,29 +99,22 @@ class GoogleAnalytics extends AbstractHelper
         $container = $this->getContainer();
         if (!$container instanceof HeadScript) {
             throw new RuntimeException(sprintf(
-                    'Container %s does not extend HeadScript view helper', $this->getContainerName()
+                'Container %s does not extend HeadScript view helper',
+                $this->getContainerName()
             ));
         }
 
-        $script = $this->script->getScript();
+        $code = $this->script->getCode();
 
-        if (empty($script)) {
+        if (empty($code)) {
             return;
         }
 
-        $container->appendScript($script);
+        $container->appendScript($code);
 
         // Mark this GA as rendered
         $this->rendered = true;
 
         return $this;
-    }
-
-    protected function getContainer()
-    {
-        $containerName = $this->getContainerName();
-        $container     = $this->view->plugin($containerName);
-
-        return $container;
     }
 }

@@ -66,7 +66,7 @@ class Analyticsjs implements ScriptInterface
         return $output;
     }
 
-    public function getScript()
+    public function getCode()
     {
         // Do not render when tracker is disabled
         if (!$this->tracker->enabled()) {
@@ -247,15 +247,33 @@ SCRIPT;
 
     protected function prepareTransaction(Transaction $transaction)
     {
+        $transactionParams = array(
+            'id' => $transaction->getId(),
+        );
+
+        $affiliation = $transaction->getAffiliation();
+        if ($affiliation !== null) {
+            $transactionParams['affiliation'] = $affiliation;
+        }
+
+        $revenue = $transaction->getTotal();
+        if ($revenue !== null) {
+            $transactionParams['revenue'] = $revenue;
+        }
+
+        $shipping = $transaction->getItems();
+        if ($shipping !== null) {
+            $transactionParams['shipping'] = $shipping;
+        }
+
+        $tax = $transaction->getTax();
+        if ($tax !== null) {
+            $transactionParams['tax'] = $tax;
+        }
+
         $params = array(
             'ecommerce:addTransaction',
-            array(
-                'id'          => $transaction->getId(),
-                'affiliation' => $transaction->getAffiliation(),
-                'revenue'     => $transaction->getTotal(),
-                'shipping'    => $transaction->getItems(),
-                'tax'         => $transaction->getTax(),
-            ),
+            $transactionParams,
         );
 
         return $this->callGa($params);
@@ -274,16 +292,34 @@ SCRIPT;
 
     protected function prepareTransactionItem(Transaction $transaction, Item $item)
     {
+        $itemParams = array(
+            'id'   => $transaction->getId(),
+            'name' => $item->getProduct(),
+        );
+
+        $sku = $item->getSku();
+        if ($sku !== null) {
+            $itemParams['sku'] = $sku;
+        }
+
+        $category = $item->getCategory();
+        if ($category !== null) {
+            $itemParams['category'] = $category;
+        }
+
+        $price = $item->getPrice();
+        if ($price !== null) {
+            $itemParams['price'] = $price;
+        }
+
+        $quantity = $item->getQuantity();
+        if ($quantity !== null) {
+            $itemParams['quantity'] = $quantity;
+        }
+
         $params = array(
             'ecommerce:addItem',
-            array(
-                'id'       => $transaction->getId(),
-                'name'     => $item->getProduct(),
-                'sku'      => $item->getSku(),
-                'category' => $item->getCategory(),
-                'price'    => $item->getPrice(),
-                'quantity' => $item->getQuantity(),
-            ),
+            $itemParams,
         );
 
         return $this->callGa($params);

@@ -44,5 +44,5 @@ use SlmGoogleAnalytics\Analytics\Tracker;
 interface ScriptInterface
 {
     public function setTracker(Tracker $tracker);
-    public function getScript();
+    public function getCode();
 }

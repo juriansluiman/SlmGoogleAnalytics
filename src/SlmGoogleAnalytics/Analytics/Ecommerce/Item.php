@@ -41,30 +41,19 @@ namespace SlmGoogleAnalytics\Analytics\Ecommerce;
 
 class Item
 {
-    const DEFAULT_QUANTITY = 1;
-
     protected $sku;
     protected $price;
-    protected $quantity = self::DEFAULT_QUANTITY;
-    protected $product  = '';
-    protected $category = '';
+    protected $quantity;
+    protected $product;
+    protected $category;
 
-    public function __construct($sku, $price, $quantity = self::DEFAULT_QUANTITY, $product = null, $category = null)
+    public function __construct($sku, $price, $quantity = null, $product = null, $category = null)
     {
         $this->setSku($sku);
         $this->setPrice($price);
-
-        if (self::DEFAULT_QUANTITY !== $quantity) {
-            $this->setQuantity($quantity);
-        }
-
-        if (null !== $product) {
-            $this->setProduct($product);
-        }
-
-        if (null !== $category) {
-            $this->setCategory($category);
-        }
+        $this->setQuantity($quantity);
+        $this->setProduct($product);
+        $this->setCategory($category);
     }
 
     public function getSku()

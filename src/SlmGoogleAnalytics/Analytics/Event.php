@@ -43,20 +43,15 @@ class Event
 {
     protected $category;
     protected $action;
-    protected $label = '';
-    protected $value = '';
+    protected $label;
+    protected $value;
 
-    public function __construct($category, $action, $label = '', $value = '')
+    public function __construct($category, $action, $label = null, $value = null)
     {
         $this->setCategory($category);
         $this->setAction($action);
-
-        if ($label !== null) {
-            $this->setLabel($label);
-        }
-        if ($value !== null) {
-            $this->setValue($value);
-        }
+        $this->setLabel($label);
+        $this->setValue($value);
     }
 
     public function getCategory()

@@ -45,10 +45,9 @@ use SlmGoogleAnalytics\Analytics\Tracker;
 
 class TrackerFactory implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('config');
+        $config   = $serviceLocator->get('config');
         $gaConfig = $config['google_analytics'];
 
         $tracker = new Tracker($gaConfig['id']);
@@ -68,7 +67,6 @@ class TrackerFactory implements FactoryInterface
         if (false === $gaConfig['enable']) {
             $tracker->setEnableTracking(false);
         }
-
         return $tracker;
     }
 }

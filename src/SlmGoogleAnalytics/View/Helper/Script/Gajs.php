@@ -43,6 +43,8 @@ use Zend\Json\Encoder;
 use SlmGoogleAnalytics\Analytics\Tracker;
 use SlmGoogleAnalytics\Analytics\CustomVariable;
 use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
+use SlmGoogleAnalytics\Analytics\Ecommerce\Item;
+use SlmGoogleAnalytics\Analytics\Event;
 
 class Gajs implements ScriptInterface
 {
@@ -55,7 +57,7 @@ class Gajs implements ScriptInterface
         $this->tracker = $tracker;
     }
 
-    public function getScript()
+    public function getCode()
     {
         // Do not render when tracker is disabled
         if (!$this->tracker->enabled()) {
@@ -131,6 +133,7 @@ SCRIPT;
         if ($this->tracker->getAnonymizeIp()) {
             return $this->push('gat._anonymizeIp');
         }
+        return '';
     }
 
     protected function prepareCustomVariables()
@@ -170,14 +173,19 @@ SCRIPT;
         $output = '';
 
         foreach ($events as $event) {
-            $output .= $this->push('trackEvent', array(
-                $event->getCategory(),
-                $event->getAction(),
-                $event->getLabel(),
-                $event->getValue(),
-            ));
+            $output .= $this->prepareTrackEvent($event);
         }
         return $output;
+    }
+
+    protected function prepareTrackEvent(Event $event)
+    {
+        return $this->push('trackEvent', array(
+            $event->getCategory(),
+            $event->getAction(),
+            $event->getLabel(),
+            $event->getValue(),
+        ));
     }
 
     protected function prepareTransactions()
@@ -186,23 +194,26 @@ SCRIPT;
         $output       = '';
 
         foreach ($transactions as $transaction) {
-            $output .= $this->push('addTrans', array(
-                $transaction->getId(),
-                $transaction->getAffiliation(),
-                $transaction->getTotal(),
-                $transaction->getTax(),
-                $transaction->getShipping(),
-                $transaction->getCity(),
-                $transaction->getState(),
-                $transaction->getCountry(),
-            ));
-
-            $output .= $this->prepareTransactionItems($transaction);
+            $output .= $this->prepareTransaction($transaction);
         }
         if ($output !== '') {
             $output .= $this->push('trackTrans');
         }
         return $output;
+    }
+
+    protected function prepareTransaction(Transaction $transaction)
+    {
+        return $this->push('addTrans', array(
+            $transaction->getId(),
+            $transaction->getAffiliation(),
+            $transaction->getTotal(),
+            $transaction->getTax(),
+            $transaction->getShipping(),
+            $transaction->getCity(),
+            $transaction->getState(),
+            $transaction->getCountry(),
+        )) . $this->prepareTransactionItems($transaction);
     }
 
     protected function prepareTransactionItems(Transaction $transaction)
@@ -211,15 +222,20 @@ SCRIPT;
         $items  = $transaction->getItems();
 
         foreach ($items as $item) {
-            $output .= $this->push('addItem', array(
-                $transaction->getId(),
-                $item->getSku(),
-                $item->getProduct(),
-                $item->getCategory(),
-                $item->getPrice(),
-                $item->getQuantity(),
-            ));
+            $output .= $this->prepareTransactionItem($transaction, $item);
         }
         return $output;
+    }
+
+    protected function prepareTransactionItem(Transaction $transaction, Item $item)
+    {
+        return $this->push('addItem', array(
+            $transaction->getId(),
+            $item->getSku(),
+            $item->getProduct(),
+            $item->getCategory(),
+            $item->getPrice(),
+            $item->getQuantity(),
+        ));
     }
 }

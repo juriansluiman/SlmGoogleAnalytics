@@ -79,7 +79,7 @@ class Tracker
 
     public function setId($id)
     {
-        $this->id = $id;
+        $this->id = (string) $id;
     }
 
     public function enabled()
@@ -114,10 +114,7 @@ class Tracker
 
     public function setDomainName($domain_name)
     {
-        if (!is_string($domain_name))
-            throw new InvalidArgumentException('$domain_name is not a string');
-
-        $this->domainName = $domain_name;
+        $this->domainName = (string) $domain_name;
     }
 
     public function getDomainName()
@@ -149,9 +146,10 @@ class Tracker
     {
         $index = $variable->getIndex();
         if (array_key_exists($index, $this->customVariables)) {
-            throw new InvalidArgumentException(
-            'Cannot add custom variable with index %d, it already exists', $index
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Cannot add custom variable with index %d, it already exists',
+                $index
+            ));
         }
 
         $this->customVariables[$index] = $variable;
@@ -177,10 +175,10 @@ class Tracker
         $id = $transaction->getId();
         if (array_key_exists($id, $this->transactions)) {
             throw new InvalidArgumentException(sprintf(
-                    'Cannot add transaction with id %s, it already exists', $id
+                'Cannot add transaction with id %s, it already exists',
+                $id
             ));
         }
-
         $this->transactions[$id] = $transaction;
     }
 }

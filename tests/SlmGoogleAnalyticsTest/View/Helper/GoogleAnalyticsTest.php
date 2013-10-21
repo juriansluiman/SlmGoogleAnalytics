@@ -88,7 +88,7 @@ class GoogleAnalyticsTest extends TestCase
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains('_gaq.push(["_setAccount",123])', $output);
+        $this->assertContains('_gaq.push(["_setAccount","123"])', $output);
     }
 
     public function testHelperTracksPagesByDefault()
@@ -273,7 +273,7 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains('_gaq.push(["_trackEvent","Category","Action","","Value"])', $output);
+        $this->assertContains('_gaq.push(["_trackEvent","Category","Action",null,"Value"])', $output);
     }
 
     public function testHelperRendersEmptyValueAsEmptyString()
@@ -285,7 +285,7 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains('_gaq.push(["_trackEvent","Category","Action","Label",""])', $output);
+        $this->assertContains('_gaq.push(["_trackEvent","Category","Action","Label",null])', $output);
     }
 
     public function testHelperRendersEmptyValueAndLabelAsEmptyStrings()
@@ -297,7 +297,7 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains('_gaq.push(["_trackEvent","Category","Action","",""])', $output);
+        $this->assertContains('_gaq.push(["_trackEvent","Category","Action",null,null])', $output);
     }
 
     public function testHelperRendersTransaction()
@@ -341,7 +341,7 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains('_gaq.push(["_addTrans",123,"",12.55,"","","","",""])', $output);
+        $this->assertContains('_gaq.push(["_addTrans",123,null,12.55,null,null,null,null,null])', $output);
     }
 
     public function testHelperRendersTransactionItem()
@@ -386,7 +386,7 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains('_gaq.push(["_addItem",123,456,"","",9.66,1])', $output);
+        $this->assertContains('_gaq.push(["_addItem",123,456,null,null,9.66,1])', $output);
     }
 
     protected function getOutput(Helper $helper)
