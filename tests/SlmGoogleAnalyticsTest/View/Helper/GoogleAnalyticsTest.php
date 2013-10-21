@@ -41,14 +41,14 @@ namespace SlmGoogleAnalyticsTest\View\Helper;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\View\Renderer\PhpRenderer;
+use SlmGoogleAnalytics\Analytics\CustomVariable;
+use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
+use SlmGoogleAnalytics\Analytics\Ecommerce\Item;
+use SlmGoogleAnalytics\Analytics\Event;
 use SlmGoogleAnalytics\Analytics\Tracker;
 use SlmGoogleAnalytics\View\Helper\GoogleAnalytics as Helper;
 use SlmGoogleAnalytics\View\Helper\Script;
 use SlmGoogleAnalyticsTest\View\Helper\TestAsset\CustomViewHelper;
-use SlmGoogleAnalytics\Analytics\CustomVariable;
-use SlmGoogleAnalytics\Analytics\Event;
-use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
-use SlmGoogleAnalytics\Analytics\Ecommerce\Item;
 
 class GoogleAnalyticsTest extends TestCase
 {
@@ -104,7 +104,7 @@ class GoogleAnalyticsTest extends TestCase
     {
         $this->tracker->setEnableTracking(false);
         $helper = $this->helper;
-        $return = $helper();
+        $return = $helper()->appendScript();
 
         $this->assertEquals(null, $return);
     }
@@ -113,9 +113,9 @@ class GoogleAnalyticsTest extends TestCase
     {
         $this->setExpectedException('Zend\ServiceManager\Exception\ServiceNotFoundException');
 
-        $this->helper->setContainer('NonExistingViewHelper');
+        $this->helper->setContainerName('NonExistingViewHelper');
         $helper = $this->helper;
-        $helper();
+        $helper()->appendScript();
     }
 
     public function testHelperThrowsExceptionWithContainerNotInheritedFromHeadscript()
@@ -129,9 +129,9 @@ class GoogleAnalyticsTest extends TestCase
         $broker = $view->getHelperPluginManager();
         $broker->setService('CustomViewHelper', $plugin);
 
-        $this->helper->setContainer('CustomViewHelper');
+        $this->helper->setContainerName('CustomViewHelper');
         $helper = $this->helper;
-        $helper();
+        $helper()->appendScript();
     }
 
     public function testHelperRendersNoPagesWithPageTrackingOff()
@@ -391,6 +391,7 @@ SCRIPT;
 
     protected function getOutput(Helper $helper)
     {
+        $helper->appendScript();
         $containerName = $helper->getContainerName();
         $container = $helper->getView()->plugin($containerName);
 

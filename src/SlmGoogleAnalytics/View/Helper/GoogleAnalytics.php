@@ -48,7 +48,7 @@ class GoogleAnalytics extends AbstractHelper
     /**
      * @var string
      */
-    protected $container = 'InlineScript';
+    protected $containerName = 'InlineScript';
 
     /**
      * @var bool
@@ -67,12 +67,12 @@ class GoogleAnalytics extends AbstractHelper
 
     public function getContainerName()
     {
-        return $this->container;
+        return $this->containerName;
     }
 
-    public function setContainer($container)
+    public function setContainerName($container)
     {
-        $this->container = $container;
+        $this->containerName = $container;
     }
 
     public function __invoke()
