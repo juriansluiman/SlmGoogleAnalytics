@@ -111,7 +111,7 @@ SCRIPT;
     {
         $output = '';
 
-        if (array_search($name, $this->loadedPlugins) === false) {
+        if (isset($this->loadedPlugins[$name]) === false) {
             $params = array(
                 'require',
                 $name,
@@ -122,6 +122,7 @@ SCRIPT;
             }
 
             $output = $this->callGa($params);
+            $this->loadedPlugins[$name] = true;
         }
         return $output;
     }
