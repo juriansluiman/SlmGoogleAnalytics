@@ -40,6 +40,7 @@
 namespace SlmGoogleAnalytics\View\Helper\Script;
 
 use Zend\Json\Json;
+use SlmGoogleAnalytics\Analytics\Event;
 use SlmGoogleAnalytics\Analytics\Tracker;
 use SlmGoogleAnalytics\Analytics\Ecommerce\Item;
 use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
@@ -209,16 +210,26 @@ SCRIPT;
         return $output;
     }
 
-    protected function prepareTrackEvent(\SlmGoogleAnalytics\Analytics\Event $event)
+    protected function prepareTrackEvent(Event $event)
     {
         $params = array(
             'send',
             'event',
             $event->getCategory(),
             $event->getAction(),
-            $event->getLabel(),
-            $event->getValue(),
         );
+
+        $label = $event->getLabel();
+
+        if ($label !== null) {
+            $params[] = $label;
+            $value = $event->getValue();
+
+            if ($value !== null) {
+                $params[] = $value;
+            }
+        }
+
 
         return $this->callGa($params);
     }
