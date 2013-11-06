@@ -40,16 +40,16 @@ use SlmGoogleAnalytics\Exception\InvalidArgumentException;
 
 class CustomVariable
 {
-    const SCOPE_VISITOR = 1;
-    const SCOPE_SESSION = 2;
+    const SCOPE_VISITOR    = 1;
+    const SCOPE_SESSION    = 2;
     const SCOPE_PAGE_LEVEL = 3;
-    
+
     protected $index;
     protected $name;
     protected $value;
     protected $scope;
 
-    public function __construct ($index, $name, $value, $scope = self::SCOPE_PAGE_LEVEL)
+    public function __construct($index, $name, $value, $scope = self::SCOPE_PAGE_LEVEL)
     {
         $this->setIndex($index);
         $this->setName($name);
@@ -60,17 +60,15 @@ class CustomVariable
     public function setIndex($index)
     {
         if (!is_int($index)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Index must be of type integer, %s given',
-                     gettype($index)
-                )
-            );
-        }        
-        
+            throw new InvalidArgumentException(sprintf(
+                'Index must be of type integer, %s given',
+                gettype($index)
+            ));
+        }
+
         $this->index = $index;
     }
-    
+
     public function getIndex()
     {
         return $this->index;
@@ -103,16 +101,14 @@ class CustomVariable
             self::SCOPE_SESSION,
             self::SCOPE_PAGE_LEVEL
         );
-        
+
         if (!in_array($scope, $allowed, true)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Invalid value given for scope. Acceptable values are: %s.',
-                    implode(', ', $allowed)
-                )    
-            );
+            throw new InvalidArgumentException(sprintf(
+                'Invalid value given for scope. Acceptable values are: %s.',
+                implode(', ', $allowed)
+            ));
         }
-        
+
         $this->scope = $scope;
     }
 
@@ -120,5 +116,4 @@ class CustomVariable
     {
         return $this->scope;
     }
-
 }

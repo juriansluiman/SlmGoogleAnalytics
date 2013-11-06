@@ -45,7 +45,8 @@ use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
 
 class ItemTest extends TestCase
 {
-    public function testCanInstantiateItem ()
+
+    public function testCanInstantiateItem()
     {
         $item = new Item(123, 12.50, 1);
 
@@ -54,17 +55,17 @@ class ItemTest extends TestCase
         $this->assertEquals(1, $item->getQuantity());
     }
 
-    public function testCanAddItemToTransaction ()
+    public function testCanAddItemToTransaction()
     {
         $item        = new Item(123, 12.50, 1);
         $transaction = new Transaction(1, 12.50);
         $transaction->addItem($item);
 
-        $items = count($transaction->items());
+        $items = count($transaction->getItems());
         $this->assertEquals(1, $items);
     }
 
-    public function testCanAddItemsToTransaction ()
+    public function testCanAddItemsToTransaction()
     {
         $item1       = new Item(123, 12.50, 1);
         $item2       = new Item(456, 22.80, 1);
@@ -72,11 +73,11 @@ class ItemTest extends TestCase
         $transaction->addItem($item1);
         $transaction->addItem($item2);
 
-        $items = count($transaction->items());
+        $items = count($transaction->getItems());
         $this->assertEquals(2, $items);
     }
 
-    public function testCanAddSameSkuMoreThanOnce ()
+    public function testCanAddSameSkuMoreThanOnce()
     {
         $item1       = new Item(123, 12.50, 1);
         $item2       = new Item(123, 22.80, 1);
@@ -84,7 +85,7 @@ class ItemTest extends TestCase
         $transaction->addItem($item1);
         $transaction->addItem($item2);
 
-        $items = $transaction->items();
+        $items = $transaction->getItems();
         $this->assertEquals(1, count($items));
 
         $item = reset($items);

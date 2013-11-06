@@ -39,19 +39,16 @@
  */
 namespace SlmGoogleAnalyticsTest\View\Helper;
 
-use StdClass;
 use PHPUnit_Framework_TestCase as TestCase;
-
 use Zend\View\Renderer\PhpRenderer;
-use Zend\View\Helper\Placeholder\Registry as PlaceholderRegistry;
-use SlmGoogleAnalytics\Analytics\Tracker;
-use SlmGoogleAnalytics\View\Helper\GoogleAnalytics as Helper;
-
-use SlmGoogleAnalyticsTest\View\Helper\TestAsset\CustomViewHelper;
 use SlmGoogleAnalytics\Analytics\CustomVariable;
-use SlmGoogleAnalytics\Analytics\Event;
 use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
 use SlmGoogleAnalytics\Analytics\Ecommerce\Item;
+use SlmGoogleAnalytics\Analytics\Event;
+use SlmGoogleAnalytics\Analytics\Tracker;
+use SlmGoogleAnalytics\View\Helper\GoogleAnalytics as Helper;
+use SlmGoogleAnalytics\View\Helper\Script;
+use SlmGoogleAnalyticsTest\View\Helper\TestAsset\CustomViewHelper;
 
 class GoogleAnalyticsTest extends TestCase
 {
@@ -65,59 +62,63 @@ class GoogleAnalyticsTest extends TestCase
      */
     protected $helper;
 
-    public function setUp ()
+    public function setUp()
     {
         $this->tracker = new Tracker(123);
         $this->tracker->setAllowLinker(true);
-        $this->helper  = new Helper($this->tracker);
+
+        $script = new Script\Gajs();
+        $script->setTracker($this->tracker);
+
+        $this->helper  = new Helper($script);
 
         $view = new PhpRenderer;
         $this->helper->setView($view);
     }
 
-    public function tearDown ()
+    public function tearDown()
     {
         unset($this->tracker);
         unset($this->helper);
     }
 
-    public function testHelperRendersAccountId ()
+    public function testHelperRendersAccountId()
     {
         $helper = $this->helper;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_setAccount', '123'])", $output);
+        $this->assertContains('_gaq.push(["_setAccount","123"])', $output);
     }
 
-    public function testHelperTracksPagesByDefault ()
+    public function testHelperTracksPagesByDefault()
     {
         $helper = $this->helper;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_trackPageview'])", $output);
+        $this->assertContains('_gaq.push(["_trackPageview"])', $output);
     }
 
-    public function testHelperReturnsNullWithDisabledTracker ()
+    public function testHelperReturnsNullWithDisabledTracker()
     {
         $this->tracker->setEnableTracking(false);
         $helper = $this->helper;
-        $return = $helper();
+        $return = $helper()->appendScript();
 
         $this->assertEquals(null, $return);
     }
 
-    public function testHelperThrowsExceptionWithNonExistingContainer ()
+    public function testHelperThrowsExceptionWithNonExistingContainer()
     {
         $this->setExpectedException('Zend\ServiceManager\Exception\ServiceNotFoundException');
 
-        $this->helper->setContainer('NonExistingViewHelper');
+        $this->helper->setContainerName('NonExistingViewHelper');
         $helper = $this->helper;
-        $helper();
+        $helper()->appendScript();
     }
 
-    public function testHelperThrowsExceptionWithContainerNotInheritedFromHeadscript ()
+    public function testHelperThrowsExceptionWithContainerNotInheritedFromHeadscript()
     {
         $this->setExpectedException('SlmGoogleAnalytics\Exception\RuntimeException');
 
@@ -128,12 +129,12 @@ class GoogleAnalyticsTest extends TestCase
         $broker = $view->getHelperPluginManager();
         $broker->setService('CustomViewHelper', $plugin);
 
-        $this->helper->setContainer('CustomViewHelper');
+        $this->helper->setContainerName('CustomViewHelper');
         $helper = $this->helper;
-        $helper();
+        $helper()->appendScript();
     }
 
-    public function testHelperRendersNoPagesWithPageTrackingOff ()
+    public function testHelperRendersNoPagesWithPageTrackingOff()
     {
         $this->tracker->setEnablePageTracking(false);
         $helper = $this->helper;
@@ -141,10 +142,10 @@ class GoogleAnalyticsTest extends TestCase
 
         $output = $this->getOutput($this->helper);
         $this->assertGreaterThan(0, strlen($output));
-        $this->assertFalse(strpos($output, "_gaq.push(['_trackPageview'])"));
+        $this->assertFalse(strpos($output, '_gaq.push(["_trackPageview"])'));
     }
 
-    public function testHelperLoadsFileFromGoogle ()
+    public function testHelperLoadsFileFromGoogle()
     {
         $helper = $this->helper;
         $helper();
@@ -161,9 +162,9 @@ SCRIPT;
         $this->assertContains($script, $output);
     }
 
-    public function testHelperDoesNotRenderTwice ()
+    public function testHelperDoesNotRenderTwice()
     {
-        $helper = $this->helper;
+        $helper  = $this->helper;
         $helper();
         $output1 = $this->getOutput($this->helper);
         $helper();
@@ -172,24 +173,24 @@ SCRIPT;
         $this->assertEquals($output1, $output2);
     }
 
-    public function testHelperRendersDomainName ()
+    public function testHelperRendersDomainName()
     {
         $this->tracker->setDomainName('foobar');
         $helper = $this->helper;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_setDomainName', 'foobar'])", $output);
+        $this->assertContains('_gaq.push(["_setDomainName","foobar"])', $output);
     }
 
-    public function testHelperRendersAllowLinker ()
+    public function testHelperRendersAllowLinker()
     {
         $this->tracker->setAllowLinker(true);
         $helper = $this->helper;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_setAllowLinker', true])", $output);
+        $this->assertContains('_gaq.push(["_setAllowLinker",true])', $output);
     }
 
     public function testHelperRendersAnonymizeIp()
@@ -199,30 +200,27 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_gat._anonymizeIp'])", $output);
+        $this->assertContains('_gaq.push(["_gat._anonymizeIp"])', $output);
     }
 
     public function testHelperOmitsAnonymipzeIpOnFalse()
     {
-        // Anonymizing IP addresses is false on default
-        $helper = $this->helper;
-
         $output = $this->getOutput($this->helper);
-        $this->assertNotContains("_gaq.push(['_gat._anonymizeIp'])", $output);
+        $this->assertNotContains('_gaq.push(["_gat._anonymizeIp"])', $output);
     }
 
     public function testHelperRendersCustomVariables()
     {
         $variable = new CustomVariable(1, 'var1', 'value1');
         $this->tracker->addCustomVariable($variable);
-        
+
         $helper = $this->helper;
         $helper();
-        
+
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_setCustomVar', 1, 'var1', 'value1', 3])", $output);
+        $this->assertContains('_gaq.push(["_setCustomVar",1,"var1","value1",3])', $output);
     }
-    
+
     public function testHelperRendersMultipleCustomVariables()
     {
         $variable1 = new CustomVariable(1, 'var1', 'value1');
@@ -230,16 +228,16 @@ SCRIPT;
 
         $this->tracker->addCustomVariable($variable1);
         $this->tracker->addCustomVariable($variable2);
-    
+
         $helper = $this->helper;
         $helper();
-    
+
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_setCustomVar', 1, 'var1', 'value1', 3])", $output);
-        $this->assertContains("_gaq.push(['_setCustomVar', 2, 'var2', 'value2', 3])", $output);
+        $this->assertContains('_gaq.push(["_setCustomVar",1,"var1","value1",3])', $output);
+        $this->assertContains('_gaq.push(["_setCustomVar",2,"var2","value2",3])', $output);
     }
-    
-    public function testHelperRendersEvent ()
+
+    public function testHelperRendersEvent()
     {
         $event = new Event('Category', 'Action', 'Label', 'Value');
 
@@ -248,10 +246,10 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_trackEvent', 'Category', 'Action', 'Label', 'Value'])", $output);
+        $this->assertContains('_gaq.push(["_trackEvent","Category","Action","Label","Value"])', $output);
     }
 
-    public function testHelperRendersMultipleEvents ()
+    public function testHelperRendersMultipleEvents()
     {
         $fooEvent = new Event('CategoryFoo', 'ActionFoo', 'LabelFoo', 'ValueFoo');
         $barEvent = new Event('CategoryBar', 'ActionBar', 'LabelBar', 'ValueBar');
@@ -262,11 +260,11 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_trackEvent', 'CategoryFoo', 'ActionFoo', 'LabelFoo', 'ValueFoo'])", $output);
-        $this->assertContains("_gaq.push(['_trackEvent', 'CategoryBar', 'ActionBar', 'LabelBar', 'ValueBar'])", $output);
+        $this->assertContains('_gaq.push(["_trackEvent","CategoryFoo","ActionFoo","LabelFoo","ValueFoo"])', $output);
+        $this->assertContains('_gaq.push(["_trackEvent","CategoryBar","ActionBar","LabelBar","ValueBar"])', $output);
     }
 
-    public function testHelperRendersEmptyLabelAsEmptyString ()
+    public function testHelperRendersEmptyLabelAsEmptyString()
     {
         $event = new Event('Category', 'Action', null, 'Value');
 
@@ -275,10 +273,10 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_trackEvent', 'Category', 'Action', '', 'Value'])", $output);
+        $this->assertContains('_gaq.push(["_trackEvent","Category","Action",null,"Value"])', $output);
     }
 
-    public function testHelperRendersEmptyValueAsEmptyString ()
+    public function testHelperRendersEmptyValueAsEmptyString()
     {
         $event = new Event('Category', 'Action', 'Label');
 
@@ -287,10 +285,10 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_trackEvent', 'Category', 'Action', 'Label', ''])", $output);
+        $this->assertContains('_gaq.push(["_trackEvent","Category","Action","Label",null])', $output);
     }
 
-    public function testHelperRendersEmptyValueAndLabelAsEmptyStrings ()
+    public function testHelperRendersEmptyValueAndLabelAsEmptyStrings()
     {
         $event = new Event('Category', 'Action');
 
@@ -299,10 +297,10 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_trackEvent', 'Category', 'Action', '', ''])", $output);
+        $this->assertContains('_gaq.push(["_trackEvent","Category","Action",null,null])', $output);
     }
 
-    public function testHelperRendersTransaction ()
+    public function testHelperRendersTransaction()
     {
         $transaction = new Transaction(123, 12.55);
 
@@ -319,10 +317,10 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_addTrans', '123', 'Affiliation', '12.55', '9.66', '3.22', 'City', 'State', 'Country'])", $output);
+        $this->assertContains('_gaq.push(["_addTrans",123,"Affiliation",12.55,9.66,3.22,"City","State","Country"])', $output);
     }
 
-    public function testHelperRendersTransactionTracking ()
+    public function testHelperRendersTransactionTracking()
     {
         $transaction = new Transaction(123, 12.55);
 
@@ -331,10 +329,10 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_trackTrans'])", $output);
+        $this->assertContains('_gaq.push(["_trackTrans"])', $output);
     }
 
-    public function testHelperRendersTransactionWithOptionalValuesEmpty ()
+    public function testHelperRendersTransactionWithOptionalValuesEmpty()
     {
         $transaction = new Transaction(123, 12.55);
 
@@ -343,10 +341,10 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_addTrans', '123', '', '12.55', '', '', '', '', ''])", $output);
+        $this->assertContains('_gaq.push(["_addTrans",123,null,12.55,null,null,null,null,null])', $output);
     }
 
-    public function testHelperRendersTransactionItem ()
+    public function testHelperRendersTransactionItem()
     {
         $transaction = new Transaction(123, 12.55);
         $item        = new Item(456, 9.66, 1, 'Product', 'Category');
@@ -357,10 +355,10 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_addItem', '123', '456', 'Product', 'Category', '9.66', '1'])", $output);
+        $this->assertContains('_gaq.push(["_addItem",123,456,"Product","Category",9.66,1])', $output);
     }
 
-    public function testHelperRendersTransactionWithMultipleItems ()
+    public function testHelperRendersTransactionWithMultipleItems()
     {
         $transaction = new Transaction(123, 12.55);
         $item1       = new Item(456, 9.66, 1, 'Product1', 'Category1');
@@ -373,11 +371,11 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_addItem', '123', '456', 'Product1', 'Category1', '9.66', '1'])", $output);
-        $this->assertContains("_gaq.push(['_addItem', '123', '789', 'Product2', 'Category2', '15.33', '2'])", $output);
+        $this->assertContains('_gaq.push(["_addItem",123,456,"Product1","Category1",9.66,1])', $output);
+        $this->assertContains('_gaq.push(["_addItem",123,789,"Product2","Category2",15.33,2])', $output);
     }
 
-    public function testHelperRendersItemWithOptionalValuesEmpty ()
+    public function testHelperRendersItemWithOptionalValuesEmpty()
     {
         $transaction = new Transaction(123, 12.55);
         $item        = new Item(456, 9.66, 1);
@@ -388,13 +386,14 @@ SCRIPT;
         $helper();
 
         $output = $this->getOutput($this->helper);
-        $this->assertContains("_gaq.push(['_addItem', '123', '456', '', '', '9.66', '1'])", $output);
+        $this->assertContains('_gaq.push(["_addItem",123,456,null,null,9.66,1])', $output);
     }
 
-    protected function getOutput (Helper $helper)
+    protected function getOutput(Helper $helper)
     {
-        $container = $helper->getContainer();
-        $container = $helper->getView()->plugin($container);
+        $helper->appendScript();
+        $containerName = $helper->getContainerName();
+        $container = $helper->getView()->plugin($containerName);
 
         return $container->toString();
     }

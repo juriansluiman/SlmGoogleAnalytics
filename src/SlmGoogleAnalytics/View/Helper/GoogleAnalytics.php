@@ -41,145 +41,80 @@ namespace SlmGoogleAnalytics\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\HeadScript;
-use SlmGoogleAnalytics\Analytics\Tracker;
-
 use SlmGoogleAnalytics\Exception\RuntimeException;
 
 class GoogleAnalytics extends AbstractHelper
 {
     /**
-     * @var Tracker
-     */
-    protected $tracker;
-
-    /**
      * @var string
      */
-    protected $container = 'InlineScript';
+    protected $containerName = 'InlineScript';
 
     /**
      * @var bool
      */
     protected $rendered = false;
 
-    public function __construct (Tracker $tracker)
+    /**
+     * @var Script\ScriptInterface
+     */
+    protected $script;
+
+    public function __construct(Script\ScriptInterface $script)
     {
-        $this->tracker = $tracker;
+        $this->script = $script;
     }
 
-    public function getContainer ()
+    public function getContainerName()
     {
-        return $this->container;
+        return $this->containerName;
     }
 
-    public function setContainer ($container)
+    public function setContainerName($container)
     {
-        $this->container = $container;
+        $this->containerName = $container;
     }
 
-    public function __invoke ()
+    protected function getContainer()
+    {
+        $containerName = $this->getContainerName();
+        $container     = $this->view->plugin($containerName);
+
+        return $container;
+    }
+
+    public function __invoke()
+    {
+        return $this;
+    }
+
+    public function appendScript()
     {
         // Do not render the GA twice
-        if  ($this->rendered) {
-            return;
-        }
-
-        // Do not render when tracker is disabled
-        $tracker = $this->tracker;
-        if (!$tracker->enabled()) {
+        if ($this->rendered) {
             return;
         }
 
         // We need to be sure $container->appendScript() can be called
-        $container = $this->view->plugin($this->getContainer());
+        $container = $this->getContainer();
         if (!$container instanceof HeadScript) {
             throw new RuntimeException(sprintf(
                 'Container %s does not extend HeadScript view helper',
-                 $this->getContainer()
+                $this->getContainerName()
             ));
         }
 
-        $script  = "var _gaq = _gaq || [];\n";
-        $script .= sprintf("_gaq.push(['_setAccount', '%s']);\n",
-                           $tracker->getId());
+        $code = $this->script->getCode();
 
-        if ($tracker->getDomainName()) {
-            $script .= sprintf("_gaq.push(['_setDomainName', '%s']);\n",
-                               $tracker->getDomainName());;
+        if (empty($code)) {
+            return;
         }
 
-        if ($tracker->getAllowLinker()) {
-            $script .= "_gaq.push(['_setAllowLinker', true]);\n";
-        }
-
-        if ($tracker->getAnonymizeIp()) {
-            $script .= "_gaq.push(['_gat._anonymizeIp']);\n";
-        }
-
-        if (null !== ($customVariables = $tracker->customVariables())) {
-            foreach ($customVariables as $variable) {
-                $script .= sprintf("_gaq.push(['_setCustomVar', %d, '%s', '%s', %d]);\n",
-                        $variable->getIndex(),
-                        $variable->getName(),
-                        $variable->getValue(),
-                        $variable->getScope());
-            }
-        }
-        
-        if ($tracker->enabledPageTracking()) {
-            $script .= "_gaq.push(['_trackPageview']);\n";
-        }
-        
-
-        if (null !== ($events = $tracker->events())) {
-            foreach ($events as $event) {
-                $script .= sprintf("_gaq.push(['_trackEvent', '%s', '%s', '%s', '%s']);\n",
-                                   $event->getCategory(),
-                                   $event->getAction(),
-                                   $event->getLabel() ?: '',
-                                   $event->getValue() ?: '');
-            }
-        }
-
-        if (null !== ($transactions = $tracker->transactions())) {
-            foreach ($transactions as $transaction) {
-                $script .= sprintf("_gaq.push(['_addTrans', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s']);\n",
-                                   $transaction->getId(),
-                                   $transaction->getAffiliation() ?: '',
-                                   $transaction->getTotal(),
-                                   $transaction->getTax() ?: '',
-                                   $transaction->getShipping() ?: '',
-                                   $transaction->getCity() ?: '',
-                                   $transaction->getState() ?: '',
-                                   $transaction->getCountry() ?: '');
-
-                if (null !== ($items = $transaction->items())) {
-                    foreach ($items as $item) {
-                        $script .= sprintf("_gaq.push(['_addItem', '%s', '%s', '%s', '%s', '%s', '%s']);\n",
-                                           $transaction->getId(),
-                                           $item->getSku() ?: '',
-                                           $item->getProduct() ?: '',
-                                           $item->getCategory() ?: '',
-                                           $item->getPrice(),
-                                           $item->getQuantity());
-                    }
-                }
-            }
-
-            $script .= "_gaq.push(['_trackTrans']);";
-        }
-
-        $script .= <<<SCRIPT
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();\n
-SCRIPT;
-
-        $container->appendScript($script);
+        $container->appendScript($code);
 
         // Mark this GA as rendered
         $this->rendered = true;
+
+        return $this;
     }
 }

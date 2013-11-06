@@ -32,77 +32,29 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author      Jurian Sluiman <jurian@juriansluiman.nl>
+ * @author      Witold Wasiczko <witold@wasiczko.pl>
  * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @link        http://juriansluiman.nl
+ * @link        http://www.psd2html.pl
  */
-namespace SlmGoogleAnalytics\Analytics\Ecommerce;
+namespace SlmGoogleAnalytics\Service;
 
-class Item
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+
+class ScriptFactory implements FactoryInterface
 {
-    protected $sku;
-    protected $price;
-    protected $quantity;
-    protected $product;
-    protected $category;
-
-    public function __construct($sku, $price, $quantity = null, $product = null, $category = null)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->setSku($sku);
-        $this->setPrice($price);
-        $this->setQuantity($quantity);
-        $this->setProduct($product);
-        $this->setCategory($category);
-    }
+        $config     = $serviceLocator->get('config');
+        $scriptName = $config['google_analytics']['script'];
 
-    public function getSku()
-    {
-        return $this->sku;
-    }
+        $script = $serviceLocator->get($scriptName);
+        /* @var $script \SlmGoogleAnalytics\View\Helper\Script\ScriptInterface */
+        $ga     = $serviceLocator->get('google-analytics');
 
-    public function setSku($sku)
-    {
-        $this->sku = $sku;
-    }
+        $script->setTracker($ga);
 
-    public function getProduct()
-    {
-        return $this->product;
-    }
-
-    public function setProduct($product)
-    {
-        $this->product = $product;
-    }
-
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    public function setCategory($category)
-    {
-        $this->category = $category;
-    }
-
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    public function setPrice($price)
-    {
-        $this->price = $price;
-    }
-
-    public function getQuantity()
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity($quantity)
-    {
-        $this->quantity = $quantity;
+        return $script;
     }
 }
