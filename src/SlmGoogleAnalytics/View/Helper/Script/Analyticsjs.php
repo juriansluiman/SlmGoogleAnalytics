@@ -71,7 +71,7 @@ class Analyticsjs implements ScriptInterface
     {
         // Do not render when tracker is disabled
         if (!$this->tracker->enabled()) {
-            return '';
+            return;
         }
 
         $script = $this->getLoadScript();
