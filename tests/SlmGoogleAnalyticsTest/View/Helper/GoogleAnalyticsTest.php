@@ -209,6 +209,16 @@ SCRIPT;
         $this->assertNotContains('_gaq.push(["_gat._anonymizeIp"])', $output);
     }
 
+    public function testHelperRendersCustomUrl()
+    {
+        $this->tracker->setPageUrl('/home/landingPage');
+        $helper = $this->helper;
+        $helper();
+
+        $output = $this->getOutput($this->helper);
+        $this->assertContains('_gaq.push(["_trackPageview","\/home\/landingPage"]);', $output);
+    }
+
     public function testHelperRendersCustomVariables()
     {
         $variable = new CustomVariable(1, 'var1', 'value1');

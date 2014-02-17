@@ -163,6 +163,12 @@ SCRIPT;
             'pageview',
         );
 
+        $pageUrl = $this->tracker->getPageUrl();
+
+        if (!empty($pageUrl)) {
+            $parameters['page'] = $pageUrl;
+        }
+
         $customVariables = $this->tracker->getCustomVariables();
 
         if (count($customVariables) > 0) {

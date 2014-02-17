@@ -66,6 +66,7 @@ class Tracker
     protected $customVariables = array();
     protected $events          = array();
     protected $transactions    = array();
+    protected $pageUrl;
 
     public function __construct($id)
     {
@@ -122,6 +123,15 @@ class Tracker
         return $this->domainName;
     }
 
+    public function setPageUrl($pageUrl)
+    {
+        $this->pageUrl = $pageUrl;
+    }
+
+    public function getPageUrl()
+    {
+        return $this->pageUrl;
+    }
     public function clearDomainName()
     {
         $this->domainName = null;
