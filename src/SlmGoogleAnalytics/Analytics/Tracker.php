@@ -132,6 +132,7 @@ class Tracker
     {
         return $this->pageUrl;
     }
+
     public function clearDomainName()
     {
         $this->domainName = null;

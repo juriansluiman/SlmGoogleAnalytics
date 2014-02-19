@@ -165,7 +165,7 @@ SCRIPT;
 
         $pageUrl = $this->tracker->getPageUrl();
 
-        if (!empty($pageUrl)) {
+        if ($pageUrl !== null) {
             $parameters['page'] = $pageUrl;
         }
 

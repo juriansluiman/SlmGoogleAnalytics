@@ -163,7 +163,7 @@ SCRIPT;
     {
         if ($this->tracker->enabledPageTracking()) {
             $pageUrl = $this->tracker->getPageUrl();
-            if (!empty($pageUrl)) {
+            if ($pageUrl !== null) {
                 return $this->push('trackPageview', array($pageUrl));
             } else {
                 return $this->push('trackPageview');
