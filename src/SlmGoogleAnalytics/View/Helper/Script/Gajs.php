@@ -162,7 +162,12 @@ SCRIPT;
     protected function prepareEnabledPageTracking()
     {
         if ($this->tracker->enabledPageTracking()) {
-            return $this->push('trackPageview');
+            $pageUrl = $this->tracker->getPageUrl();
+            if ($pageUrl !== null) {
+                return $this->push('trackPageview', array($pageUrl));
+            } else {
+                return $this->push('trackPageview');
+            }
         }
         return '';
     }
