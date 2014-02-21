@@ -279,7 +279,7 @@ SCRIPT;
             $transactionParams['revenue'] = $revenue;
         }
 
-        $shipping = $transaction->getItems();
+        $shipping = $transaction->getShipping();
         if ($shipping !== null) {
             $transactionParams['shipping'] = $shipping;
         }
