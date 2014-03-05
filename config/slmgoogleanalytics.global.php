@@ -26,6 +26,13 @@ $googleAnalytics = array(
      * false.
      */
     // 'enable' => false,
+
+     /**
+     * Enable this if you would like to place inline script in any other container (ex. HeadScript).
+     * Default value is InlineScript.
+     */
+    //'container_name' => 'InlineScript',
+
 );
 
 /**

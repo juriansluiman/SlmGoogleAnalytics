@@ -51,6 +51,13 @@ class GoogleAnalyticsFactory implements FactoryInterface
         $script = $sm->get('SlmGoogleAnalytics\Service\ScriptFactory');
         $helper = new GoogleAnalytics($script);
 
+        $config = $sm->get('config');
+        $config = $config['google_analytics'];
+
+        if (isset($config['container_name'])) {
+            $helper->setContainerName($config['container_name']);
+        }
+
         return $helper;
     }
 }
