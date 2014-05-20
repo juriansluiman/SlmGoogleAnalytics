@@ -60,6 +60,10 @@ class TrackerFactory implements FactoryInterface
             $tracker->setAllowLinker($gaConfig['allow_linker']);
         }
 
+        if (true === $gaConfig['enable_display_advertising']) {
+            $tracker->setEnableDisplayAdvertising(true);
+        }
+
         if (true === $gaConfig['anonymize_ip']) {
             $tracker->setAnonymizeIp(true);
         }

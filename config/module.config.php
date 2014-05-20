@@ -40,12 +40,13 @@
 
 return array(
     'google_analytics' => array(
-        'enable'       => true,
-        'id'           => '',
-        'domain_name'  => '',
-        'allow_linker' => false,
-        'anonymize_ip' => false,
-        'script'       => 'google-analytics-ga',
+        'enable'                     => true,
+        'id'                         => '',
+        'domain_name'                => '',
+        'allow_linker'               => false,
+        'enable_display_advertising' => false,
+        'anonymize_ip'               => false,
+        'script'                     => 'google-analytics-ga',
     ),
     'service_manager'  => array(
         'aliases'    => array(
