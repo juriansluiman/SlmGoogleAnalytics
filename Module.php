@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012 Jurian Sluiman.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,15 +32,15 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     SlmGoogleAnalytics
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012 Jurian Sluiman.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
 namespace SlmGoogleAnalytics;
 
 use Zend\EventManager\EventInterface;
+use Zend\Http\Request as HttpRequest;
 use Zend\ModuleManager\Feature;
 use Zend\Mvc\MvcEvent;
 
@@ -49,6 +49,7 @@ class Module implements
     Feature\ConfigProviderInterface,
     Feature\BootstrapListenerInterface
 {
+
     public function getAutoloaderConfig()
     {
         return array(
@@ -77,13 +78,18 @@ class Module implements
     public function onBootstrap(EventInterface $e)
     {
         $app = $e->getParam('application');
-        $sm  = $app->getServiceManager();
-        $em  = $app->getEventManager();
+
+        if (!$app->getRequest() instanceof HttpRequest) {
+            return;
+        }
+
+        $sm = $app->getServiceManager();
+        $em = $app->getEventManager();
 
         $em->attach(MvcEvent::EVENT_RENDER, function(MvcEvent $e) use ($sm) {
             $view   = $sm->get('ViewHelperManager');
             $plugin = $view->get('googleAnalytics');
-            $plugin();
+            $plugin->appendScript();
         });
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012 Jurian Sluiman.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,9 +32,8 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     SlmGoogleAnalytics
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012 Jurian Sluiman.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
@@ -60,50 +59,50 @@ class Tracker
      * @var bool
      */
     protected $enableTracking = true;
-
     protected $enablePageTracking = true;
-
     protected $allowLinker = false;
     protected $domainName;
+    protected $anonymizeIp = false;
+    protected $customVariables = array();
+    protected $events          = array();
+    protected $transactions    = array();
+    protected $pageUrl;
 
-    protected $events;
-    protected $transactions;
-
-    public function __construct ($id)
+    public function __construct($id)
     {
         $this->setId($id);
     }
 
-    public function getId ()
+    public function getId()
     {
         return $this->id;
     }
 
-    public function setId ($id)
+    public function setId($id)
     {
-        $this->id = $id;
+        $this->id = (string) $id;
     }
 
-    public function enabled ()
+    public function enabled()
     {
         return $this->enableTracking;
     }
 
-    public function setEnableTracking ($enable_tracking = true)
+    public function setEnableTracking($enable_tracking = true)
     {
         $this->enableTracking = (bool) $enable_tracking;
     }
 
-    public function enabledPageTracking ()
+    public function enabledPageTracking()
     {
         return $this->enablePageTracking;
     }
 
-    public function setEnablePageTracking ($enable_page_tracking = true)
+    public function setEnablePageTracking($enable_page_tracking = true)
     {
         $this->enablePageTracking = (bool) $enable_page_tracking;
     }
-    
+
     public function setAllowLinker($allow_linker)
     {
         $this->allowLinker = (bool) $allow_linker;
@@ -116,10 +115,7 @@ class Tracker
 
     public function setDomainName($domain_name)
     {
-        if (!is_string($domain_name))
-            throw new InvalidArgumentException('$domain_name is not a string');
-            
-        $this->domainName = $domain_name;
+        $this->domainName = (string) $domain_name;
     }
 
     public function getDomainName()
@@ -127,36 +123,66 @@ class Tracker
         return $this->domainName;
     }
 
+    public function setPageUrl($pageUrl)
+    {
+        $this->pageUrl = $pageUrl;
+    }
+
+    public function getPageUrl()
+    {
+        return $this->pageUrl;
+    }
+
     public function clearDomainName()
     {
         $this->domainName = null;
     }
-    
-    public function events ()
+
+    public function getAnonymizeIp()
+    {
+        return $this->anonymizeIp;
+    }
+
+    public function setAnonymizeIp($flag)
+    {
+        $this->anonymizeIp = (bool) $flag;
+    }
+
+    public function getCustomVariables()
+    {
+        return $this->customVariables;
+    }
+
+    public function addCustomVariable(CustomVariable $variable)
+    {
+        $index = $variable->getIndex();
+        if (array_key_exists($index, $this->customVariables)) {
+            throw new InvalidArgumentException(sprintf(
+                'Cannot add custom variable with index %d, it already exists',
+                $index
+            ));
+        }
+
+        $this->customVariables[$index] = $variable;
+    }
+
+    public function getEvents()
     {
         return $this->events;
     }
 
-    public function addEvent (Event $event)
+    public function addEvent(Event $event)
     {
-        if (null === $this->events) {
-            $this->events = array();
-        }
-
         $this->events[] = $event;
     }
 
-    public function transactions ()
+    public function getTransactions()
     {
         return $this->transactions;
     }
 
-    public function addTransaction (Transaction $transaction)
+    public function addTransaction(Transaction $transaction)
     {
-        if (null === $this->transactions) {
-            $this->transactions = array();
-        }
-
         $id = $transaction->getId();
         if (array_key_exists($id, $this->transactions)) {
             throw new InvalidArgumentException(sprintf(
@@ -164,7 +190,6 @@ class Tracker
                 $id
             ));
         }
-
         $this->transactions[$id] = $transaction;
     }
 }

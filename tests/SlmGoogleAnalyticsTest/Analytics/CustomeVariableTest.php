@@ -32,59 +32,67 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @link        http://juriansluiman.nl
  */
-namespace SlmGoogleAnalyticsTest\Analytics\Ecommerce;
+namespace SlmGoogleAnalyticsTest\Analytics;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use SlmGoogleAnalytics\Analytics\Tracker;
-use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
+use SlmGoogleAnalytics\Analytics\CustomVariable;
 
-class TransactionTest extends TestCase
+class CustomeVariableTest extends TestCase
 {
 
-    public function testCanInstantiateTransaction()
+    public function testCanInstantiateCustomeVariable()
     {
-        $transaction = new Transaction(123, 12.50);
+        $variable = new CustomVariable(1, 'var1', 'value1');
 
-        $this->assertEquals(123, $transaction->getId());
-        $this->assertEquals(12.50, $transaction->getTotal());
+        $this->assertEquals(1, $variable->getIndex());
+        $this->assertEquals('var1', $variable->getName());
+        $this->assertEquals('value1', $variable->getValue());
+        $this->assertEquals(CustomVariable::SCOPE_PAGE_LEVEL, $variable->getScope());
     }
 
-    public function testCanAddTransactionToTracker()
+    public function testCanAddCustomeVariableToTrack()
     {
-        $tracker     = new Tracker(123);
-        $transaction = new Transaction(123, 12.50);
-        $tracker->addTransaction($transaction);
+        $tracker  = new Tracker(123);
+        $variable = new CustomVariable(1, 'var1', 'value1');
+        $tracker->addCustomVariable($variable);
 
-        $transactions = count($tracker->getTransactions());
-        $this->assertEquals(1, $transactions);
+        $this->assertCount(1, $tracker->getCustomVariables());
     }
 
-    public function testCanAddMultipleTransactionsToTracker()
+    public function testCanAddMultipleCustomVariablesToTracker()
     {
-        $tracker      = new Tracker(123);
-        $transaction1 = new Transaction(123, 12.50);
-        $transaction2 = new Transaction(456, 12.50);
-        $tracker->addTransaction($transaction1);
-        $tracker->addTransaction($transaction2);
+        $tracker   = new Tracker(123);
+        $variable1 = new CustomVariable(1, 'var1', 'value1');
+        $variable2 = new CustomVariable(2, 'var2', 'value2');
+        $tracker->addCustomVariable($variable1);
+        $tracker->addCustomVariable($variable2);
 
-        $transactions = count($tracker->getTransactions());
-        $this->assertEquals(2, $transactions);
+        $this->assertCount(2, $tracker->getCustomVariables());
     }
 
-    public function testCannotAddTransactionsWithSameId()
+    public function testAddCustomVariablesWithSameId()
+    {
+        $tracker   = new Tracker(123);
+        $variable1 = new CustomVariable(1, 'var1', 'value1');
+        $variable2 = new CustomVariable(1, 'var2', 'value2');
+        $tracker->addCustomVariable($variable1);
+
+        $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
+        $tracker->addCustomVariable($variable2);
+    }
+
+    public function testInvalidIndex()
     {
         $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
+        $variable = new CustomVariable('index', 'var1', 'value1');
+    }
 
-        $tracker      = new Tracker(123);
-        $transaction1 = new Transaction(456, 12.50);
-        $transaction2 = new Transaction(456, 12.50);
-
-        $tracker->addTransaction($transaction1);
-        $tracker->addTransaction($transaction2);
+    public function testInvalidScope()
+    {
+        $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
+        $variable = new CustomVariable(1, 'var1', 'value1', 'scope');
     }
 }

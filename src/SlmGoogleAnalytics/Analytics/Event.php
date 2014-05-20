@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012 Jurian Sluiman.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,9 +32,8 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     SlmGoogleAnalytics
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012 Jurian Sluiman.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
@@ -47,50 +46,50 @@ class Event
     protected $label;
     protected $value;
 
-    public function __construct ($category, $action, $label = null, $value = null)
+    public function __construct($category, $action, $label = null, $value = null)
     {
-        $this->category = $category;
-        $this->action   = $action;
-        $this->label    = $label;
-        $this->value    = $value;
+        $this->setCategory($category);
+        $this->setAction($action);
+        $this->setLabel($label);
+        $this->setValue($value);
     }
 
-    public function getCategory ()
+    public function getCategory()
     {
         return $this->category;
     }
 
-    public function setCategory ($category)
+    public function setCategory($category)
     {
         $this->category = $category;
     }
 
-    public function getAction ()
+    public function getAction()
     {
         return $this->action;
     }
 
-    public function setAction ($action)
+    public function setAction($action)
     {
         $this->action = $action;
     }
 
-    public function getLabel ()
+    public function getLabel()
     {
         return $this->label;
     }
 
-    public function setLabel ($label)
+    public function setLabel($label)
     {
         $this->label = $label;
     }
 
-    public function getValue ()
+    public function getValue()
     {
         return $this->value;
     }
 
-    public function setValue ($value)
+    public function setValue($value)
     {
         $this->value = $value;
     }

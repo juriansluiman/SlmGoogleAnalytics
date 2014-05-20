@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012 Jurian Sluiman.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,9 +32,8 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     SlmGoogleAnalytics
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012 Jurian Sluiman.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
@@ -46,7 +45,8 @@ use SlmGoogleAnalytics\Analytics\Event;
 
 class EventTest extends TestCase
 {
-    public function testCanInstantiateEvent ()
+
+    public function testCanInstantiateEvent()
     {
         $event = new Event('Category', 'Action');
 
@@ -54,17 +54,17 @@ class EventTest extends TestCase
         $this->assertEquals('Action', $event->getAction());
     }
 
-    public function testCanAddEventToTracker ()
+    public function testCanAddEventToTracker()
     {
         $tracker = new Tracker(123);
         $event   = new Event('Category', 'Action');
         $tracker->addEvent($event);
 
-        $events = count($tracker->events());
+        $events = count($tracker->getEvents());
         $this->assertEquals(1, $events);
     }
 
-    public function testCanAddMultipleEventsToTracker ()
+    public function testCanAddMultipleEventsToTracker()
     {
         $tracker = new Tracker(123);
         $event1  = new Event('Category', 'Action');
@@ -72,25 +72,25 @@ class EventTest extends TestCase
         $tracker->addEvent($event1);
         $tracker->addEvent($event2);
 
-        $events = count($tracker->events());
+        $events = count($tracker->getEvents());
         $this->assertEquals(2, $events);
     }
 
-    public function testCanHaveEventLabel ()
+    public function testCanHaveEventLabel()
     {
         $event = new Event('Category', 'Action', 'Label');
 
         $this->assertEquals('Label', $event->getLabel());
     }
 
-    public function testCanHaveEventValue ()
+    public function testCanHaveEventValue()
     {
         $event = new Event('Category', 'Action', null, 123);
 
         $this->assertEquals(123, $event->getValue());
     }
 
-    public function testCanHaveEventLabelAndValue ()
+    public function testCanHaveEventLabelAndValue()
     {
         $event = new Event('Category', 'Action', 'Label', 123);
 

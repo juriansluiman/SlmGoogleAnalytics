@@ -1,9 +1,12 @@
 {
-    "name": "juriansluiman/slm-google-analytics",
+    "name": "slm/google-analytics",
     "description": "Google Analytics tracking integration for Zend Framework 2",
+    "license": "BSD-3-Clause",
     "type": "library",
     "keywords": [
-        "zf2"
+        "zf2",
+        "google analytics",
+        "ga"
     ],
     "homepage": "https://github.com/juriansluiman/SlmGoogleAnalytics",
     "authors": [
@@ -15,7 +18,7 @@
     ],
     "require": {
         "php": ">=5.3.3.",
-        "zendframework/zendframework": ">=2.0.0beta5"
+        "zendframework/zendframework": "~2.2"
     },
     "autoload": {
         "classmap": [

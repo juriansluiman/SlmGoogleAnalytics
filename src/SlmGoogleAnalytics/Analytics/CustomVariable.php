@@ -32,77 +32,88 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @link        http://juriansluiman.nl
  */
-namespace SlmGoogleAnalytics\Analytics\Ecommerce;
+namespace SlmGoogleAnalytics\Analytics;
 
-class Item
+use SlmGoogleAnalytics\Exception\InvalidArgumentException;
+
+class CustomVariable
 {
-    protected $sku;
-    protected $price;
-    protected $quantity;
-    protected $product;
-    protected $category;
+    const SCOPE_VISITOR    = 1;
+    const SCOPE_SESSION    = 2;
+    const SCOPE_PAGE_LEVEL = 3;
 
-    public function __construct($sku, $price, $quantity = null, $product = null, $category = null)
+    protected $index;
+    protected $name;
+    protected $value;
+    protected $scope;
+
+    public function __construct($index, $name, $value, $scope = self::SCOPE_PAGE_LEVEL)
     {
-        $this->setSku($sku);
-        $this->setPrice($price);
-        $this->setQuantity($quantity);
-        $this->setProduct($product);
-        $this->setCategory($category);
+        $this->setIndex($index);
+        $this->setName($name);
+        $this->setValue($value);
+        $this->setScope($scope);
     }
 
-    public function getSku()
+    public function setIndex($index)
     {
-        return $this->sku;
+        if (!is_int($index)) {
+            throw new InvalidArgumentException(sprintf(
+                'Index must be of type integer, %s given',
+                gettype($index)
+            ));
+        }
+
+        $this->index = $index;
     }
 
-    public function setSku($sku)
+    public function getIndex()
     {
-        $this->sku = $sku;
+        return $this->index;
     }
 
-    public function getProduct()
+    public function setName($name)
     {
-        return $this->product;
+        $this->name = $name;
     }
 
-    public function setProduct($product)
+    public function getName()
     {
-        $this->product = $product;
+        return $this->name;
     }
 
-    public function getCategory()
+    public function setValue($value)
     {
-        return $this->category;
+        $this->value = $value;
     }
 
-    public function setCategory($category)
+    public function getValue()
     {
-        $this->category = $category;
+        return $this->value;
     }
 
-    public function getPrice()
+    public function setScope($scope)
     {
-        return $this->price;
+        $allowed = array(
+            self::SCOPE_VISITOR,
+            self::SCOPE_SESSION,
+            self::SCOPE_PAGE_LEVEL
+        );
+
+        if (!in_array($scope, $allowed, true)) {
+            throw new InvalidArgumentException(sprintf(
+                'Invalid value given for scope. Acceptable values are: %s.',
+                implode(', ', $allowed)
+            ));
+        }
+
+        $this->scope = $scope;
     }
 
-    public function setPrice($price)
+    public function getScope()
     {
-        $this->price = $price;
-    }
-
-    public function getQuantity()
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity($quantity)
-    {
-        $this->quantity = $quantity;
+        return $this->scope;
     }
 }

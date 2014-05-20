@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012 Jurian Sluiman.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,9 +32,8 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     SlmGoogleAnalytics
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012 Jurian Sluiman.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
@@ -45,31 +44,32 @@ use SlmGoogleAnalytics\Analytics\Tracker;
 
 class TrackerTest extends TestCase
 {
-    public function testCanInstantiateTracker ()
+
+    public function testCanInstantiateTracker()
     {
         $tracker = new Tracker(123);
         $this->assertEquals(123, $tracker->getId());
     }
 
-    public function testIsEnabledByDefault ()
+    public function testIsEnabledByDefault()
     {
         $tracker = new Tracker(123);
         $this->assertTrue($tracker->enabled());
     }
 
-    public function testHasPageTrackingEnabledByDefault ()
+    public function testHasPageTrackingEnabledByDefault()
     {
         $tracker = new Tracker(123);
         $this->assertTrue($tracker->enabledPageTracking());
     }
 
-    public function testDomainNameDefaultsToFalse ()
+    public function testDomainNameDefaultsToFalse()
     {
         $tracker = new Tracker(123);
         $this->assertNull($tracker->getDomainName());
     }
 
-    public function testDomainName ()
+    public function testDomainName()
     {
         $tracker = new Tracker(123);
         $tracker->setDomainName('foobar');
@@ -84,12 +84,23 @@ class TrackerTest extends TestCase
         $this->assertNull($tracker->getDomainName());
     }
 
-    public function testAllowLinkerDefaultsToFalse ()
+    public function testAllowLinkerDefaultsToFalse()
     {
         $tracker = new Tracker(123);
         $tracker->setAllowLinker(true);
         $this->assertTrue($tracker->getAllowLinker());
     }
 
-}
+    public function testAnonymizeIpDefaultsToFalse()
+    {
+        $tracker = new Tracker(123);
+        $this->assertFalse($tracker->getAnonymizeIp());
+    }
 
+    public function testAnonymizeIp()
+    {
+        $tracker = new Tracker(123);
+        $tracker->setAnonymizeIp(true);
+        $this->assertTrue($tracker->getAnonymizeIp());
+    }
+}

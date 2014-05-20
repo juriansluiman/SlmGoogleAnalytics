@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2012 Jurian Sluiman.
+ * Copyright (c) 2012-2013 Jurian Sluiman.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,48 +32,39 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     SlmGoogleAnalytics
  * @author      Jurian Sluiman <jurian@juriansluiman.nl>
- * @copyright   2012 Jurian Sluiman.
+ * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
 
-use SlmGoogleAnalytics\Analytics;
-use SlmGoogleAnalytics\View\Helper;
-
 return array(
-	'view_helpers' => array(
-        'factories' => array(
-            'googleAnalytics' => function($sm) {
-            	$tracker = $sm->getServiceLocator()->get('google-analytics');
-            	$helper  = new Helper\GoogleAnalytics($tracker);
-
-            	return $helper;
-            },
+    'google_analytics' => array(
+        'enable'       => true,
+        'id'           => '',
+        'domain_name'  => '',
+        'allow_linker' => false,
+        'anonymize_ip' => false,
+        'script'       => 'google-analytics-ga',
+    ),
+    'service_manager'  => array(
+        'aliases'    => array(
+            'google-analytics'           => 'SlmGoogleAnalytics\Analytics\Tracker',
+            'google-analytics-universal' => 'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs',
+            'google-analytics-ga'        => 'SlmGoogleAnalytics\View\Helper\Script\Gajs',
+        ),
+        'invokables' => array(
+            'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs' => 'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs',
+            'SlmGoogleAnalytics\View\Helper\Script\Gajs'        => 'SlmGoogleAnalytics\View\Helper\Script\Gajs',
+        ),
+        'factories'  => array(
+            'SlmGoogleAnalytics\Analytics\Tracker'     => 'SlmGoogleAnalytics\Service\TrackerFactory',
+            'SlmGoogleAnalytics\Service\ScriptFactory' => 'SlmGoogleAnalytics\Service\ScriptFactory',
         ),
     ),
-    'service_manager' => array(
-    	'aliases' => array(
-    		'google-analytics' => 'SlmGoogleAnalytics\Analytics\Tracker',
-		),
+    'view_helpers'     => array(
         'factories' => array(
-            'SlmGoogleAnalytics\Analytics\Tracker' => function($sm) {
-            	$config = $sm->get('config');
-            	$config = $config['google_analytics'];
-
-            	$tracker = new Analytics\Tracker($config['id']);
-                
-                if (isset($config['domain_name'])) {
-                    $tracker->setDomainName($config['domain_name']);
-                }
-                
-                if (isset($config['allow_linker'])) {
-                    $tracker->setAllowLinker($config['allow_linker']);
-                }
-                
-            	return $tracker;
-            },
+            'googleAnalytics' => 'SlmGoogleAnalytics\Service\GoogleAnalyticsFactory',
         ),
-    ),
+    )
 );

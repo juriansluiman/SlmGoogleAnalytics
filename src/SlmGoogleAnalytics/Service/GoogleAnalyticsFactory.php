@@ -32,14 +32,25 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author      Jurian Sluiman <jurian@juriansluiman.nl>
+ * @author      Witold Wasiczko <witold@wasiczko.pl>
  * @copyright   2012-2013 Jurian Sluiman.
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @link        http://juriansluiman.nl
+ * @link        http://www.psd2html.pl
  */
+namespace SlmGoogleAnalytics\Service;
 
-// Get base, application and tests path
-define('BASE_PATH',  dirname(__DIR__));
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use SlmGoogleAnalytics\View\Helper\GoogleAnalytics;
 
-// Load autoloader
-require_once BASE_PATH . '/vendor/autoload.php';
+class GoogleAnalyticsFactory implements FactoryInterface
+{
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $sm = $serviceLocator->getServiceLocator();
+        $script = $sm->get('SlmGoogleAnalytics\Service\ScriptFactory');
+        $helper = new GoogleAnalytics($script);
+
+        return $helper;
+    }
+}
