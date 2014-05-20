@@ -91,6 +91,12 @@ class TrackerTest extends TestCase
         $this->assertTrue($tracker->getAllowLinker());
     }
 
+    public function testEnableDisplayAdvertisingDefaultsToFalse()
+    {
+        $tracker = new Tracker(123);
+        $this->assertFalse($tracker->getEnableDisplayAdvertising());
+    }
+
     public function testAnonymizeIpDefaultsToFalse()
     {
         $tracker = new Tracker(123);
