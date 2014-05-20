@@ -166,3 +166,25 @@ $var   = new SlmGoogleAnalytics\Analytics\CustomVariable($index, $name, $value, 
 ```
 
 The scope can be `SCOPE_VISITOR`, `SCOPE_SESSION` or (the default) `SCOPE_PAGE_LEVEL`.
+
+### Display Advertising
+To enable Google Analytics [Display Advertising](https://support.google.com/analytics/answer/3450482) features simply call the appropiate method on the tracker. 
+
+```php
+$ga->setEnableDisplayAdvertising(true);
+```
+
+Or, alternatively, you can set these variables inside the configuration:
+
+```php
+'google_analytics' => array(
+    'enable_display_advertising' => true,
+),
+```
+
+
+The Google Analytics Display Advertising features include the following:
+
+- [Demographics and Interests reporting](https://support.google.com/analytics/answer/2799357)
+- [Remarketing with Google Analytics](https://support.google.com/analytics/answer/2611268)
+- DoubleClick Campaign Manager integration (for [Google Analytics Premium](https://www.google.com/intl/en_ALL/analytics/premium/index.html))
