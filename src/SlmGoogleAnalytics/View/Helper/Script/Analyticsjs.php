@@ -209,7 +209,7 @@ SCRIPT;
 
     protected function prepareDisplayAdvertising()
     {
-        $output          = '';
+        $output = '';
 
         if ($this->tracker->getEnableDisplayAdvertising()) {
             $output .= $this->requirePlugin('displayfeatures');
