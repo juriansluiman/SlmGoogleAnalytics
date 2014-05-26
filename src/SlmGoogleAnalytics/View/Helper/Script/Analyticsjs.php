@@ -78,6 +78,7 @@ class Analyticsjs implements ScriptInterface
 
         $script .= $this->prepareCreate();
         $script .= $this->prepareLinker();
+        $script .= $this->prepareDisplayAdvertising();
         $script .= $this->prepareTrackEvents();
         $script .= $this->prepareTransactions();
         $script .= $this->prepareSend();
@@ -203,6 +204,17 @@ SCRIPT;
 
             $output .= $this->callGa($params);
         }
+        return $output;
+    }
+
+    protected function prepareDisplayAdvertising()
+    {
+        $output = '';
+
+        if ($this->tracker->getEnableDisplayAdvertising()) {
+            $output .= $this->requirePlugin('displayfeatures');
+        }
+
         return $output;
     }
 

@@ -61,6 +61,7 @@ class Tracker
     protected $enableTracking = true;
     protected $enablePageTracking = true;
     protected $allowLinker = false;
+    protected $enableDisplayAdvertising = false;
     protected $domainName;
     protected $anonymizeIp = false;
     protected $customVariables = array();
@@ -111,6 +112,16 @@ class Tracker
     public function getAllowLinker()
     {
         return $this->allowLinker;
+    }
+
+    public function setEnableDisplayAdvertising($enableDisplayAdvertising)
+    {
+        $this->enableDisplayAdvertising = $enableDisplayAdvertising;
+    }
+
+    public function getEnableDisplayAdvertising()
+    {
+        return $this->enableDisplayAdvertising;
     }
 
     public function setDomainName($domain_name)
