@@ -121,6 +121,15 @@ SCRIPT;
         $this->assertContains($expected, $actual);
     }
 
+    public function testHelperRendersDisplayFeaturesAdvertising()
+    {
+        $this->tracker->setEnableDisplayAdvertising(true);
+
+        $expected = 'ga("require","displayfeatures");';
+        $actual   = $this->script->getCode();
+        $this->assertContains($expected, $actual);
+    }
+
     public function testHelperRendersDomainName()
     {
         $this->tracker->setDomainName('foobar');

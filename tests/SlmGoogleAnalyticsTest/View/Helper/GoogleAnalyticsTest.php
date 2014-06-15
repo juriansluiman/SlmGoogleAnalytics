@@ -93,28 +93,6 @@ class GoogleAnalyticsTest extends TestCase
         $helper()->appendScript();
     }
 
-    public function testEnableDisplayFeaturesLoadDifferentFileFromGoogle()
-    {
-        $this->tracker->setEnableDisplayAdvertising(true);
-
-        $script = new Script\Gajs();
-        $script->setTracker($this->tracker);
-
-        $helper = new Helper($script);
-        $helper();
-
-        $script = <<<SCRIPT
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();\n
-SCRIPT;
-
-        $output = $this->getOutput($this->helper);
-        $this->assertContains($script, $output);
-    }
-
     public function testHelperDoesNotRenderTwice()
     {
         $helper  = $this->helper;

@@ -122,6 +122,22 @@ SCRIPT;
         $this->assertContains($expected, $actual);
     }
 
+    public function testDisplayFeaturesAdvertisingLoadsFileFromDoubleclick()
+    {
+        $this->tracker->setEnableDisplayAdvertising(true);
+
+        $expected = <<<SCRIPT
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();\n
+SCRIPT;
+
+        $actual = $this->script->getCode();
+        $this->assertContains($expected, $actual);
+    }
+
     public function testHelperRendersDomainName()
     {
         $this->tracker->setDomainName('foobar');
