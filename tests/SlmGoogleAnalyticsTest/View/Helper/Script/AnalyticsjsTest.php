@@ -258,18 +258,13 @@ SCRIPT;
     public function testHelperRendersTransaction()
     {
         $transaction = new Transaction(123, 12.55);
-
-        $transaction->setAffiliation('Affiliation');
-        $transaction->setTax(9.66);
-        $transaction->setShipping(3.22);
-
-        $transaction->setCity('City');
-        $transaction->setState('State');
-        $transaction->setCountry('Country');
-
         $this->tracker->addTransaction($transaction);
 
-        $expected = '_gaq.push(["_addTrans",123,"Affiliation",12.55,9.66,3.22,"City","State","Country"])';
+        $expected = 'ga("require","ecommerce","ecommerce.js");';
+        $actual   = $this->script->getCode();
+        $this->assertContains($expected, $actual);
+
+        $expected = 'ga("ecommerce:addTransaction",{"id":123,"revenue":12.55});';
         $actual   = $this->script->getCode();
         $this->assertContains($expected, $actual);
     }
@@ -279,17 +274,21 @@ SCRIPT;
         $transaction = new Transaction(123, 12.55);
         $this->tracker->addTransaction($transaction);
 
-        $expected = '_gaq.push(["_trackTrans"])';
+        $expected = 'ga("ecommerce:send");';
         $actual   = $this->script->getCode();
         $this->assertContains($expected, $actual);
     }
 
-    public function testHelperRendersTransactionWithOptionalValuesEmpty()
+    public function testHelperRendersTransactionWithAdditionalValues()
     {
         $transaction = new Transaction(123, 12.55);
+        $transaction->setAffiliation('Affiliation');
+        $transaction->setTax(9.66);
+        $transaction->setShipping(3.22);
+
         $this->tracker->addTransaction($transaction);
 
-        $expected = '_gaq.push(["_addTrans",123,null,12.55,null,null,null,null,null])';
+        $expected = 'ga("ecommerce:addTransaction",{"id":123,"affiliation":"Affiliation","revenue":12.55,"shipping":3.22,"tax":9.66});';
         $actual   = $this->script->getCode();
         $this->assertContains($expected, $actual);
     }
@@ -297,12 +296,25 @@ SCRIPT;
     public function testHelperRendersTransactionItem()
     {
         $transaction = new Transaction(123, 12.55);
+        $item        = new Item(456, 9.66, 1, 'Product');
+        $transaction->addItem($item);
+
+        $this->tracker->addTransaction($transaction);
+
+        $expected = 'ga("ecommerce:addItem",{"id":123,"name":"Product","sku":456,"price":9.66,"quantity":1});';
+        $actual   = $this->script->getCode();
+        $this->assertContains($expected, $actual);
+    }
+
+    public function testHelperRendersTransactionItemWithAdditionalValues()
+    {
+        $transaction = new Transaction(123, 12.55);
         $item        = new Item(456, 9.66, 1, 'Product', 'Category');
         $transaction->addItem($item);
 
         $this->tracker->addTransaction($transaction);
 
-        $expected = '_gaq.push(["_addItem",123,456,"Product","Category",9.66,1])';
+        $expected = 'ga("ecommerce:addItem",{"id":123,"name":"Product","sku":456,"category":"Category","price":9.66,"quantity":1});';
         $actual   = $this->script->getCode();
         $this->assertContains($expected, $actual);
     }
@@ -317,24 +329,11 @@ SCRIPT;
 
         $this->tracker->addTransaction($transaction);
 
-        $expected = '_gaq.push(["_addItem",123,456,"Product1","Category1",9.66,1])';
+        $expected = 'ga("ecommerce:addItem",{"id":123,"name":"Product1","sku":456,"category":"Category1","price":9.66,"quantity":1});';
         $actual   = $this->script->getCode();
         $this->assertContains($expected, $actual);
 
-        $expected = '_gaq.push(["_addItem",123,789,"Product2","Category2",15.33,2])';
-        $this->assertContains($expected, $actual);
-    }
-
-    public function testHelperRendersItemWithOptionalValuesEmpty()
-    {
-        $transaction = new Transaction(123, 12.55);
-        $item        = new Item(456, 9.66, 1);
-        $transaction->addItem($item);
-
-        $this->tracker->addTransaction($transaction);
-
-        $expected = '_gaq.push(["_addItem",123,456,null,null,9.66,1])';
-        $actual   = $this->script->getCode();
+        $expected = 'ga("ecommerce:addItem",{"id":123,"name":"Product2","sku":789,"category":"Category2","price":15.33,"quantity":2});';
         $this->assertContains($expected, $actual);
     }
 }
