@@ -41,6 +41,8 @@ namespace SlmGoogleAnalyticsTest\View\Helper;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use SlmGoogleAnalytics\View\Helper\GoogleAnalytics as Helper;
+use SlmGoogleAnalyticsTest\View\Helper\TestAsset\CustomViewHelper;
+use Zend\View\Renderer\PhpRenderer;
 
 class GoogleAnalyticsTest extends TestCase
 {
@@ -51,8 +53,8 @@ class GoogleAnalyticsTest extends TestCase
 
     public function setUp()
     {
-        $script = $this->getMock('SlmGoogleAnalytics\View\Helper\Script\ScriptInterface', 'getCode');
-        $script->expects($this->once())
+        $script = $this->getMock('SlmGoogleAnalytics\View\Helper\Script\ScriptInterface');
+        $script->expects($this->any())
                ->method('getCode')
                ->will($this->returnValue('foo'));
 
