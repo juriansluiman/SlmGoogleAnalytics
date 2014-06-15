@@ -133,14 +133,9 @@ To track a transaction, you should use the
 use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
 use SlmGoogleAnalytics\Analytics\Ecommerce\Item;
 
-$transaction = new Transaction;
-$transaction->setId('1234');      // order ID
-$transaction->setTotal('28.28');  // total
+$transaction = new Transaction('1234', '28.28');
 
-$item = new Item;
-$item->setPrice('11.99');         // unit price
-$item->setQuantity('2');          // quantity
-
+$item = new Item('5678', '11.99', '2', 'Blue elephant');
 $transaction->addItem($item);
 
 $ga->addTransaction($transaction);
