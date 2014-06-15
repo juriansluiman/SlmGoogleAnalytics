@@ -57,6 +57,11 @@ $googleAnalytics = array(
      * False by default, with "true" you enable this feature.
      */
     // 'enable_display_advertising' => false,
+
+    /**
+     * Set the container name to be used for the Google Analytics code
+     */
+    //'container_name' => 'InlineScript',
 );
 
 /**
