@@ -5,7 +5,8 @@ php:
   - 5.4
 
 before_script:
-  - wget http://getcomposer.org/composer.phar
-  - php composer.phar install
+  - composer self-update
+  - composer install --dev --prefer-source
 
-script: phpunit --configuration tests/phpunit.xml
+script:
+  - ./vendor/bin/phpunit --configuration tests/phpunit.xml
