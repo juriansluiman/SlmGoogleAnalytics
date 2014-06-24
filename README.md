@@ -249,7 +249,8 @@ The Google Analytics Display Advertising features include the following:
 ### Universal Analytics or Google Analytics
 You can switch to the universal.js code instead of ga.js.
 
-Default is [Universal Analytics](https://support.google.com/analytics/answer/2790010)
+Default is [Universal Analytics](https://support.google.com/analytics/answer/2790010).
+
 To change between each other simply set these variable inside the configuration:
 
 ```php
