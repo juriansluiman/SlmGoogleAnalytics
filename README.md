@@ -245,3 +245,20 @@ The Google Analytics Display Advertising features include the following:
 - [Demographics and Interests reporting](https://support.google.com/analytics/answer/2799357)
 - [Remarketing with Google Analytics](https://support.google.com/analytics/answer/2611268)
 - DoubleClick Campaign Manager integration (for [Google Analytics Premium](https://www.google.com/intl/en_ALL/analytics/premium/index.html))
+
+### Universal Analytics or Google Analytics
+
+You can switch to the universal.js code instead of ga.js. the default setting is to use the ga.js style. To change to the other renderer, set a variable inside the configuration:
+
+```php
+ /**
+ * Set the type of javascript to use for Google Analytics
+ *
+ * Allowed values: "google-analytics-ga" or "google-analytics-universal".
+ */
+'google_analytics' => array(
+    'script' => 'google-analytics-universal',
+),
+```
+
+More information about Benefits of using Universal Analytics is available on this [Google Developers](https://developers.google.com/analytics/devguides/collection/upgrade/#benefits) page.
