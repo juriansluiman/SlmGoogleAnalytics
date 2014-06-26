@@ -247,20 +247,18 @@ The Google Analytics Display Advertising features include the following:
 - DoubleClick Campaign Manager integration (for [Google Analytics Premium](https://www.google.com/intl/en_ALL/analytics/premium/index.html))
 
 ### Universal Analytics or Google Analytics
-You can switch to the universal.js code instead of ga.js.
 
-Default is [Universal Analytics](https://support.google.com/analytics/answer/2790010).
-
-To change between each other simply set these variable inside the configuration:
+You can switch to the universal.js code instead of ga.js. the default setting is to use the ga.js style. To change to the other renderer, set a variable inside the configuration:
 
 ```php
  /**
  * Set the type of javascript to use for Google Analytics
  *
- * This can be the ga.js or "universal" script. Default is the ga.js script, but
- * SlmGoogleAnalytics does support the univesal code as well.
- *
  * Allowed values: "google-analytics-ga" or "google-analytics-universal".
  */
- 'script' => 'google-analytics-universal',
+'google_analytics' => array(
+    'script' => 'google-analytics-universal',
+),
 ```
+
+More information about Benefits of using Universal Analytics is available on this [Google Developers](https://developers.google.com/analytics/devguides/collection/upgrade/#benefits) page.
