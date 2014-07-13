@@ -262,3 +262,25 @@ You can switch to the universal.js code instead of ga.js. the default setting is
 ```
 
 More information about Benefits of using Universal Analytics is available on this [Google Developers](https://developers.google.com/analytics/devguides/collection/upgrade/#benefits) page.
+
+## Track client side events
+
+You can use the javascript Google Analytics API to track events. This is done via the following API:
+
+```javascript
+// ga.js
+_gaq.push(['_trackEvent', 'Videos', 'Play', 'Gone With the Wind']);
+
+// analytics.js
+ga('send', 'event', 'category', 'action', 'label');
+```
+
+If you want to track clicks on outbound links or form submits, you might consider this approach:
+
+```html
+<a href="http://example.com" onclick="ga('send', 'event', 'category', 'action');">
+  Click me!
+</a>
+```
+
+The problem here is that browsers kill the Google Analytics request to register this event before it is completed. The browser wants to follow the new document location `http://example.com` and therefore abort all running asynchronous HTTP requests, including this Analytics tracking request. There is a method to track the event and thereafter follow the link, but this only works with the *universal analytics.js*. To help you with this, there is a utility [Tracker.js](https://juriansluiman.nl/article/150/track-google-analytics-events-on-outbound-links).
