@@ -48,13 +48,15 @@ class CustomVariable
     protected $name;
     protected $value;
     protected $scope;
+    protected $override = false;
 
-    public function __construct($index, $name, $value, $scope = self::SCOPE_PAGE_LEVEL)
+    public function __construct($index, $name, $value, $scope = self::SCOPE_PAGE_LEVEL, $override = false)
     {
         $this->setIndex($index);
         $this->setName($name);
         $this->setValue($value);
         $this->setScope($scope);
+        $this->setOverride($override);
     }
 
     public function setIndex($index)
@@ -115,5 +117,15 @@ class CustomVariable
     public function getScope()
     {
         return $this->scope;
+    }
+
+    public function setOverride($override)
+    {
+        $this->override = $override;
+    }
+
+    public function getOverride()
+    {
+        return $this->override;
     }
 }
