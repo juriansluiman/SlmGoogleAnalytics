@@ -1,5 +1,5 @@
 {
-    "name": "slm/google-analytics",
+    "name": "jield-webdev/google-analytics",
     "description": "Google Analytics tracking integration for Zend Framework 2",
     "license": "BSD-3-Clause",
     "type": "library",
