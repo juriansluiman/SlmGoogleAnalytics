@@ -1,10 +1,11 @@
 {
-    "name": "jield-webdev/google-analytics",
-    "description": "Google Analytics tracking integration for Zend Framework 2",
+    "name": "slm/google-analytics",
+    "description": "Google Analytics tracking integration for Zend Framework 2 and 3",
     "license": "BSD-3-Clause",
     "type": "library",
     "keywords": [
         "zf2",
+        "zf3",
         "google analytics",
         "ga"
     ],
