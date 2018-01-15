@@ -20,7 +20,11 @@
         "php": ">=5.3.3.",
 
         "zendframework/zend-escaper": "^2.5",
+        "zendframework/zend-eventmanager": "^2.5 | ^3.0",
+        "zendframework/zend-http": "^2.5",
         "zendframework/zend-json": "^2.5 | ^3.0",
+        "zendframework/zend-modulemanager": "^2.5",
+        "zendframework/zend-mvc": "^2.5 | ^3.0",
         "zendframework/zend-servicemanager": "^2.5 | ^3.0",
         "zendframework/zend-view": "^2.5",
 
