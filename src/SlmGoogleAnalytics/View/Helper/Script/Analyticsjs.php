@@ -174,11 +174,15 @@ SCRIPT;
 
         if (count($customVariables) > 0) {
             foreach ($customVariables as $customVariable) {
-                $index = $customVariable->getIndex();
-                $key   = 'dimension' . $index;
-                $value = $customVariable->getValue();
+                if ($customVariable->getOverride()) {
+                    $parameters[$customVariable->getName()] = $customVariable->getValue();
+                } else {
+                    $index = $customVariable->getIndex();
+                    $key   = 'dimension' . $index;
+                    $value = $customVariable->getValue();
 
-                $parameters[$key] = $value;
+                    $parameters[$key] = $value;
+                }
             }
         }
 
