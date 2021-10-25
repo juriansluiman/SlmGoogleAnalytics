@@ -37,11 +37,11 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
-namespace SlmGoogleAnalyticsTest\View\Helper;
+namespace LaminasGoogleAnalyticsTest\View\Helper;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use SlmGoogleAnalytics\View\Helper\GoogleAnalytics as Helper;
-use SlmGoogleAnalyticsTest\View\Helper\TestAsset\CustomViewHelper;
+use LaminasGoogleAnalytics\View\Helper\GoogleAnalytics as Helper;
+use LaminasGoogleAnalyticsTest\View\Helper\TestAsset\CustomViewHelper;
 use Zend\View\Renderer\PhpRenderer;
 
 class GoogleAnalyticsTest extends TestCase
@@ -53,7 +53,7 @@ class GoogleAnalyticsTest extends TestCase
 
     public function setUp()
     {
-        $script = $this->getMock('SlmGoogleAnalytics\View\Helper\Script\ScriptInterface');
+        $script = $this->getMock('LaminasGoogleAnalytics\View\Helper\Script\ScriptInterface');
         $script->expects($this->any())
                ->method('getCode')
                ->will($this->returnValue('foo'));
@@ -81,7 +81,7 @@ class GoogleAnalyticsTest extends TestCase
 
     public function testHelperThrowsExceptionWithContainerNotInheritedFromHeadscript()
     {
-        $this->setExpectedException('SlmGoogleAnalytics\Exception\RuntimeException');
+        $this->setExpectedException('LaminasGoogleAnalytics\Exception\RuntimeException');
 
         $view   = $this->helper->getView();
         $plugin = new CustomViewHelper;

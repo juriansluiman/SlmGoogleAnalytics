@@ -37,47 +37,26 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://www.psd2html.pl
  */
-namespace SlmGoogleAnalytics\Service;
+namespace LaminasGoogleAnalytics\Service;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use LaminasGoogleAnalytics\View\Helper\GoogleAnalytics;
 
-/**
- * Class ScriptFactory
- *
- * @package SlmGoogleAnalytics\Service
- */
-class ScriptFactory implements FactoryInterface
+final class GoogleAnalyticsFactory implements FactoryInterface
 {
-    /**
-     * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null|null    $options
-     *
-     * @return \SlmGoogleAnalytics\View\Helper\Script\ScriptInterface
-     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config     = $container->get('config');
-        $scriptName = $config['google_analytics']['script'];
+        $script = $container->get(ScriptFactory::class);
+        $helper = new GoogleAnalytics($script);
 
-        $script = $container->get($scriptName);
-        /* @var $script \SlmGoogleAnalytics\View\Helper\Script\ScriptInterface */
-        $ga = $container->get('google-analytics');
+        $config = $container->get('config');
+        $config = $config['google_analytics'];
 
-        $script->setTracker($ga);
+        if (isset($config['container_name'])) {
+            $helper->setContainerName($config['container_name']);
+        }
 
-        return $script;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return \SlmGoogleAnalytics\View\Helper\Script\ScriptInterface
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, '');
+        return $helper;
     }
 }

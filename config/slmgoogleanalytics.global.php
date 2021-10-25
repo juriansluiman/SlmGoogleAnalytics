@@ -1,6 +1,6 @@
 <?php
 /**
- * SlmGoogleAnalytics Configuration
+ * LaminasGoogleAnalytics Configuration
  *
  * If you have a ./configs/autoload/ directory set up for your project, you can
  * drop this config file in it and change the values as you wish.
@@ -24,7 +24,7 @@ $googleAnalytics = array(
      * Set the type of javascript to use for Google Analytics
      *
      * This can be the ga.js or "universal" script. Default is the ga.js script, but
-     * SlmGoogleAnalytics does support the univesal code as well.
+     * LaminasGoogleAnalytics does support the univesal code as well.
      *
      * Allowed values: "google-analytics-ga" or "google-analytics-universal".
      */

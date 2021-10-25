@@ -37,11 +37,11 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
-namespace SlmGoogleAnalyticsTest\Analytics\Ecommerce;
+namespace LaminasGoogleAnalyticsTest\Analytics\Ecommerce;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use SlmGoogleAnalytics\Analytics\Ecommerce\Item;
-use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
+use LaminasGoogleAnalytics\Analytics\Ecommerce\Item;
+use LaminasGoogleAnalytics\Analytics\Ecommerce\Transaction;
 
 class ItemTest extends TestCase
 {

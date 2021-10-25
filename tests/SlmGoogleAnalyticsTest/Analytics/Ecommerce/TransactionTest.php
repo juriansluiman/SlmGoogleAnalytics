@@ -37,11 +37,11 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
-namespace SlmGoogleAnalyticsTest\Analytics\Ecommerce;
+namespace LaminasGoogleAnalyticsTest\Analytics\Ecommerce;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use SlmGoogleAnalytics\Analytics\Tracker;
-use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
+use LaminasGoogleAnalytics\Analytics\Tracker;
+use LaminasGoogleAnalytics\Analytics\Ecommerce\Transaction;
 
 class TransactionTest extends TestCase
 {
@@ -78,7 +78,7 @@ class TransactionTest extends TestCase
 
     public function testCannotAddTransactionsWithSameId()
     {
-        $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
+        $this->setExpectedException('LaminasGoogleAnalytics\Exception\InvalidArgumentException');
 
         $tracker      = new Tracker(123);
         $transaction1 = new Transaction(456, 12.50);

@@ -50,22 +50,22 @@ return array(
     ),
     'service_manager'  => array(
         'aliases'    => array(
-            'google-analytics'           => 'SlmGoogleAnalytics\Analytics\Tracker',
-            'google-analytics-universal' => 'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs',
-            'google-analytics-ga'        => 'SlmGoogleAnalytics\View\Helper\Script\Gajs',
+            'google-analytics'           => 'LaminasGoogleAnalytics\Analytics\Tracker',
+            'google-analytics-universal' => 'LaminasGoogleAnalytics\View\Helper\Script\Analyticsjs',
+            'google-analytics-ga'        => 'LaminasGoogleAnalytics\View\Helper\Script\Gajs',
         ),
         'invokables' => array(
-            'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs' => 'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs',
-            'SlmGoogleAnalytics\View\Helper\Script\Gajs'        => 'SlmGoogleAnalytics\View\Helper\Script\Gajs',
+            'LaminasGoogleAnalytics\View\Helper\Script\Analyticsjs' => 'LaminasGoogleAnalytics\View\Helper\Script\Analyticsjs',
+            'LaminasGoogleAnalytics\View\Helper\Script\Gajs'        => 'LaminasGoogleAnalytics\View\Helper\Script\Gajs',
         ),
         'factories'  => array(
-            'SlmGoogleAnalytics\Analytics\Tracker'     => 'SlmGoogleAnalytics\Service\TrackerFactory',
-            'SlmGoogleAnalytics\Service\ScriptFactory' => 'SlmGoogleAnalytics\Service\ScriptFactory',
+            'LaminasGoogleAnalytics\Analytics\Tracker'     => 'LaminasGoogleAnalytics\Service\TrackerFactory',
+            'LaminasGoogleAnalytics\Service\ScriptFactory' => 'LaminasGoogleAnalytics\Service\ScriptFactory',
         ),
     ),
     'view_helpers'     => array(
         'factories' => array(
-            'googleAnalytics' => 'SlmGoogleAnalytics\Service\GoogleAnalyticsFactory',
+            'googleAnalytics' => 'LaminasGoogleAnalytics\Service\GoogleAnalyticsFactory',
         ),
     )
 );

@@ -34,11 +34,11 @@
  *
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  */
-namespace SlmGoogleAnalyticsTest\Analytics;
+namespace LaminasGoogleAnalyticsTest\Analytics;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use SlmGoogleAnalytics\Analytics\Tracker;
-use SlmGoogleAnalytics\Analytics\CustomVariable;
+use LaminasGoogleAnalytics\Analytics\Tracker;
+use LaminasGoogleAnalytics\Analytics\CustomVariable;
 
 class CustomeVariableTest extends TestCase
 {
@@ -80,19 +80,19 @@ class CustomeVariableTest extends TestCase
         $variable2 = new CustomVariable(1, 'var2', 'value2');
         $tracker->addCustomVariable($variable1);
 
-        $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
+        $this->setExpectedException('LaminasGoogleAnalytics\Exception\InvalidArgumentException');
         $tracker->addCustomVariable($variable2);
     }
 
     public function testInvalidIndex()
     {
-        $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
+        $this->setExpectedException('LaminasGoogleAnalytics\Exception\InvalidArgumentException');
         $variable = new CustomVariable('index', 'var1', 'value1');
     }
 
     public function testInvalidScope()
     {
-        $this->setExpectedException('SlmGoogleAnalytics\Exception\InvalidArgumentException');
+        $this->setExpectedException('LaminasGoogleAnalytics\Exception\InvalidArgumentException');
         $variable = new CustomVariable(1, 'var1', 'value1', 'scope');
     }
 }

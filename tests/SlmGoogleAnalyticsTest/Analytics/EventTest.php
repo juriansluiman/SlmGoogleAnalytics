@@ -37,11 +37,11 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
-namespace SlmGoogleAnalyticsTest\Analytics;
+namespace LaminasGoogleAnalyticsTest\Analytics;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use SlmGoogleAnalytics\Analytics\Tracker;
-use SlmGoogleAnalytics\Analytics\Event;
+use LaminasGoogleAnalytics\Analytics\Tracker;
+use LaminasGoogleAnalytics\Analytics\Event;
 
 class EventTest extends TestCase
 {

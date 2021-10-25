@@ -1,56 +1,19 @@
 <?php
-/**
- * Copyright (c) 2012-2013 Jurian Sluiman.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *
- *   * Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in
- *     the documentation and/or other materials provided with the
- *     distribution.
- *
- *   * Neither the names of the copyright holders nor the names of the
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * @author      Witold Wasiczko <witold@wasiczko.pl>
- * @copyright   2012-2013 Jurian Sluiman.
- * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @link        http://www.psd2html.pl
- */
-namespace SlmGoogleAnalytics\View\Helper\Script;
 
-use Zend\Json\Encoder;
-use SlmGoogleAnalytics\Analytics\Tracker;
-use SlmGoogleAnalytics\Analytics\CustomVariable;
-use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
-use SlmGoogleAnalytics\Analytics\Ecommerce\Item;
-use SlmGoogleAnalytics\Analytics\Event;
+namespace LaminasGoogleAnalytics\View\Helper\Script;
+
+use Laminas\Json\Encoder;
+use LaminasGoogleAnalytics\Analytics\Tracker;
+use LaminasGoogleAnalytics\Analytics\CustomVariable;
+use LaminasGoogleAnalytics\Analytics\Ecommerce\Transaction;
+use LaminasGoogleAnalytics\Analytics\Ecommerce\Item;
+use LaminasGoogleAnalytics\Analytics\Event;
 
 class Gajs implements ScriptInterface
 {
-    const METHOD_PREFIX = '_';
+    public const METHOD_PREFIX = '_';
 
-    protected $tracker;
+    protected Tracker $tracker;
 
     public function setTracker(Tracker $tracker)
     {
@@ -80,7 +43,7 @@ class Gajs implements ScriptInterface
         return $script;
     }
 
-    protected function getLoadScript()
+    protected function getLoadScript(): string
     {
         $script = 'google-analytics.com/ga.js';
         $scheme = "'https://ssl.' : 'http://www.'";
@@ -98,12 +61,12 @@ class Gajs implements ScriptInterface
 SCRIPT;
     }
 
-    protected function getVarCreate()
+    protected function getVarCreate(): string
     {
         return 'var _gaq = _gaq || [];'."\n";
     }
 
-    protected function push($methodName, array $params = array())
+    protected function push($methodName, array $params = array()): string
     {
         array_unshift($params, self::METHOD_PREFIX . $methodName);
         $jsArray = Encoder::encode($params);
@@ -112,12 +75,12 @@ SCRIPT;
         return $output;
     }
 
-    protected function prepareSetAccount()
+    protected function prepareSetAccount(): string
     {
         return $this->push('setAccount', array($this->tracker->getId()));
     }
 
-    protected function prepareSetDomain()
+    protected function prepareSetDomain(): string
     {
         $domainName = $this->tracker->getDomainName();
 
@@ -127,7 +90,7 @@ SCRIPT;
         return '';
     }
 
-    protected function prepareSetAllowLinker()
+    protected function prepareSetAllowLinker(): string
     {
         if ($this->tracker->getAllowLinker()) {
             return $this->push('setAllowLinker', array(true));
@@ -135,7 +98,7 @@ SCRIPT;
         return '';
     }
 
-    protected function prepareAnonymizeIp()
+    protected function prepareAnonymizeIp(): string
     {
         if ($this->tracker->getAnonymizeIp()) {
             return $this->push('gat._anonymizeIp');
@@ -143,7 +106,7 @@ SCRIPT;
         return '';
     }
 
-    protected function prepareCustomVariables()
+    protected function prepareCustomVariables(): string
     {
         $customVariables = $this->tracker->getCustomVariables();
         $output          = '';
@@ -154,7 +117,7 @@ SCRIPT;
         return $output;
     }
 
-    protected function prepareCustomVariable(CustomVariable $customVariable)
+    protected function prepareCustomVariable(CustomVariable $customVariable): string
     {
         $data = array(
             $customVariable->getIndex(),
@@ -166,7 +129,7 @@ SCRIPT;
         return $this->push('setCustomVar', $data);
     }
 
-    protected function prepareEnabledPageTracking()
+    protected function prepareEnabledPageTracking(): string
     {
         if ($this->tracker->enabledPageTracking()) {
             $pageUrl = $this->tracker->getPageUrl();
@@ -179,7 +142,7 @@ SCRIPT;
         return '';
     }
 
-    protected function prepareTrackEvents()
+    protected function prepareTrackEvents(): string
     {
         $events = $this->tracker->getEvents();
         $output = '';
@@ -190,7 +153,7 @@ SCRIPT;
         return $output;
     }
 
-    protected function prepareTrackEvent(Event $event)
+    protected function prepareTrackEvent(Event $event): string
     {
         return $this->push('trackEvent', array(
             $event->getCategory(),
@@ -200,7 +163,7 @@ SCRIPT;
         ));
     }
 
-    protected function prepareTransactions()
+    protected function prepareTransactions(): string
     {
         $transactions = $this->tracker->getTransactions();
         $output       = '';
@@ -214,7 +177,7 @@ SCRIPT;
         return $output;
     }
 
-    protected function prepareTransaction(Transaction $transaction)
+    protected function prepareTransaction(Transaction $transaction): string
     {
         return $this->push('addTrans', array(
             $transaction->getId(),
@@ -228,7 +191,7 @@ SCRIPT;
         )) . $this->prepareTransactionItems($transaction);
     }
 
-    protected function prepareTransactionItems(Transaction $transaction)
+    protected function prepareTransactionItems(Transaction $transaction): string
     {
         $output = '';
         $items  = $transaction->getItems();
@@ -239,7 +202,7 @@ SCRIPT;
         return $output;
     }
 
-    protected function prepareTransactionItem(Transaction $transaction, Item $item)
+    protected function prepareTransactionItem(Transaction $transaction, Item $item): string
     {
         return $this->push('addItem', array(
             $transaction->getId(),

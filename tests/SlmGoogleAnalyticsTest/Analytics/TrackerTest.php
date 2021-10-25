@@ -37,10 +37,10 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
-namespace SlmGoogleAnalyticsTest\Analytics;
+namespace LaminasGoogleAnalyticsTest\Analytics;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use SlmGoogleAnalytics\Analytics\Tracker;
+use LaminasGoogleAnalytics\Analytics\Tracker;
 
 class TrackerTest extends TestCase
 {

@@ -37,16 +37,16 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
-namespace SlmGoogleAnalyticsTest\View\Helper\Script;
+namespace LaminasGoogleAnalyticsTest\View\Helper\Script;
 
 use PHPUnit_Framework_TestCase as TestCase;
 
-use SlmGoogleAnalytics\Analytics\CustomVariable;
-use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;
-use SlmGoogleAnalytics\Analytics\Ecommerce\Item;
-use SlmGoogleAnalytics\Analytics\Event;
-use SlmGoogleAnalytics\Analytics\Tracker;
-use SlmGoogleAnalytics\View\Helper\Script\Analyticsjs;
+use LaminasGoogleAnalytics\Analytics\CustomVariable;
+use LaminasGoogleAnalytics\Analytics\Ecommerce\Transaction;
+use LaminasGoogleAnalytics\Analytics\Ecommerce\Item;
+use LaminasGoogleAnalytics\Analytics\Event;
+use LaminasGoogleAnalytics\Analytics\Tracker;
+use LaminasGoogleAnalytics\View\Helper\Script\Analyticsjs;
 
 class AnalyticsjsTest extends TestCase
 {

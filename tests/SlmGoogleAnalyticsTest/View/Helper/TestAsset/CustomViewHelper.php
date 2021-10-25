@@ -37,7 +37,7 @@
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://juriansluiman.nl
  */
-namespace SlmGoogleAnalyticsTest\View\Helper\TestAsset;
+namespace LaminasGoogleAnalyticsTest\View\Helper\TestAsset;
 
 use Zend\View\Helper\AbstractHelper;
 

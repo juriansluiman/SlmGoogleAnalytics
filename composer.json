@@ -1,33 +1,51 @@
 {
-    "name": "slm/google-analytics",
-    "description": "Google Analytics tracking integration for Zend Framework 2 and 3",
-    "license": "BSD-3-Clause",
+    "name": "laminas/google-analytics",
+    "description": "Google Analytics tracking integration for Laminas",
+    "license": "GPL-3.0-or-later",
     "type": "library",
     "keywords": [
-        "zf2",
-        "zf3",
-        "google analytics",
-        "ga"
+        "laminas",
+        "google analytics"
     ],
-    "homepage": "https://github.com/juriansluiman/SlmGoogleAnalytics",
+    "homepage": "https://github.com/jield-webdev/laminas-analytics",
     "authors": [
         {
-            "name": "Jurian Sluiman",
-            "email": "jurian@juriansluiman.nl",
-            "homepage": "http://juriansluiman.nl"
+            "name": "Johan van der Heide",
+            "email": "info@jield.nl",
+            "homepage": "https://jield"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
-        "php": ">=5.3.3.",
-        "zendframework/zendframework": "~2.2 || ~3.0"
+        "php": "^7.4 || ^8.0",
+        "laminas/laminas-mvc": "^3.3.0",
+        "laminas/laminas-json": "^3.3",
+        "laminas/laminas-view": "^2.14.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.1.*",
-        "squizlabs/php_codesniffer": "1.5.*"
+        "iteaoffice/testing": "^2.1-dev"
     },
     "autoload": {
-        "classmap": [
-            "./"
-        ]
+        "psr-4": {
+            "LaminasGoogleAnalytics\\": "src/"
+        }
+    },
+    "scripts": {
+        "check": [
+            "@php-lint",
+            "@phpstan",
+            "@cs",
+            "@test"
+        ],
+        "fix": [
+            "@cbf",
+            "@cs-fix"
+        ],
+        "php-lint": "./vendor/bin/parallel-lint src",
+        "phpstan": "./vendor/bin/phpstan analyse src/ --level=1",
+        "cs": "./vendor/bin/phpcs -n -p --standard=PSR2 --extensions=php,twig src",
+        "cbf": "./vendor/bin/phpcbf src --standard=PSR2",
+        "cs-fix": "./vendor/bin/php-cs-fixer fix -v src",
+        "test": "./vendor/bin/phpunit"
     }
 }

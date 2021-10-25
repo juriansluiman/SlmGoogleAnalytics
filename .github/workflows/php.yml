@@ -1,0 +1,61 @@
+name: PHP Composer
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        dependencies:
+          - "locked"
+        php-version:
+          - "7.4"
+          - "8.0"
+          - "8.1"
+        operating-system:
+          - "ubuntu-latest"
+
+    runs-on: ${{ matrix.operating-system }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "pcov"
+          php-version: "${{ matrix.php-version }}"
+          ini-values: memory_limit=-1
+          tools: composer:v2
+
+      - name: "Cache dependencies"
+        uses: "actions/cache@v2"
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
+          restore-keys: "php-${{ matrix.php-version }}-${{ matrix.dependencies }}"
+
+      - name: "Install highest dependencies"
+        if: ${{ matrix.dependencies == 'highest' }}
+        run: "composer update --no-interaction --no-progress --no-suggest --ignore-platform-req=php"
+
+      - name: "Install locked dependencies"
+        if: ${{ matrix.dependencies == 'locked' }}
+        run: "composer install --no-interaction --no-progress --no-suggest --ignore-platform-req=php"
+
+      - name: Run Lint Checker suite
+        run: composer php-lint
+
+      - name: PHPStan test
+        run: composer phpstan
+
