@@ -39,15 +39,22 @@
  */
 namespace SlmGoogleAnalytics\Service;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use SlmGoogleAnalytics\Analytics\Tracker;
 
 class TrackerFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    /**
+     * @param ContainerInterface $container
+     * @param string $requestedName
+     * @param array|null $options
+     * @return Tracker
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config   = $serviceLocator->get('config');
+        $config   = $container->get('config');
         $gaConfig = $config['google_analytics'];
 
         $tracker = new Tracker($gaConfig['id']);
@@ -72,5 +79,14 @@ class TrackerFactory implements FactoryInterface
             $tracker->setEnableTracking(false);
         }
         return $tracker;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return Tracker
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        return $this($serviceLocator, Tracker::class);
     }
 }
