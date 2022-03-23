@@ -38,8 +38,8 @@
  * @link        http://juriansluiman.nl
  */
 
-return array(
-    'google_analytics' => array(
+return [
+    'google_analytics' => [
         'enable'                     => true,
         'id'                         => '',
         'domain_name'                => '',
@@ -47,25 +47,23 @@ return array(
         'enable_display_advertising' => false,
         'anonymize_ip'               => false,
         'script'                     => 'google-analytics-ga',
-    ),
-    'service_manager'  => array(
-        'aliases'    => array(
-            'google-analytics'           => 'SlmGoogleAnalytics\Analytics\Tracker',
-            'google-analytics-universal' => 'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs',
-            'google-analytics-ga'        => 'SlmGoogleAnalytics\View\Helper\Script\Gajs',
-        ),
-        'invokables' => array(
-            'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs' => 'SlmGoogleAnalytics\View\Helper\Script\Analyticsjs',
-            'SlmGoogleAnalytics\View\Helper\Script\Gajs'        => 'SlmGoogleAnalytics\View\Helper\Script\Gajs',
-        ),
-        'factories'  => array(
-            'SlmGoogleAnalytics\Analytics\Tracker'     => 'SlmGoogleAnalytics\Service\TrackerFactory',
-            'SlmGoogleAnalytics\Service\ScriptFactory' => 'SlmGoogleAnalytics\Service\ScriptFactory',
-        ),
-    ),
-    'view_helpers'     => array(
-        'factories' => array(
+    ],
+    'service_manager'  => [
+        'aliases'    => [
+            'google-analytics'           => SlmGoogleAnalytics\Analytics\Tracker::class,
+            'google-analytics-universal' => SlmGoogleAnalytics\View\Helper\Script\Analyticsjs::class,
+            'google-analytics-ga'        => SlmGoogleAnalytics\View\Helper\Script\Gajs::class,
+        ],
+        'factories'  => [
+            SlmGoogleAnalytics\Analytics\Tracker::class     => SlmGoogleAnalytics\Service\TrackerFactory::class,
+            SlmGoogleAnalytics\Service\ScriptFactory::class => SlmGoogleAnalytics\Service\ScriptFactory::class,
+            SlmGoogleAnalytics\View\Helper\Script\Analyticsjs::class => \Zend\ServiceManager\Factory\InvokableFactory::class,
+            SlmGoogleAnalytics\View\Helper\Script\Gajs::class        => \Zend\ServiceManager\Factory\InvokableFactory::class,
+        ],
+    ],
+    'view_helpers'     => [
+        'factories' => [
             'googleAnalytics' => 'SlmGoogleAnalytics\Service\GoogleAnalyticsFactory',
-        ),
-    )
-);
+        ],
+    ]
+];
