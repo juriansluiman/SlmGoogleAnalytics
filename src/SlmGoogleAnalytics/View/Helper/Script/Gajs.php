@@ -39,7 +39,7 @@
  */
 namespace SlmGoogleAnalytics\View\Helper\Script;
 
-use Zend\Json\Encoder;
+use Laminas\Json\Encoder;
 use SlmGoogleAnalytics\Analytics\Tracker;
 use SlmGoogleAnalytics\Analytics\CustomVariable;
 use SlmGoogleAnalytics\Analytics\Ecommerce\Transaction;

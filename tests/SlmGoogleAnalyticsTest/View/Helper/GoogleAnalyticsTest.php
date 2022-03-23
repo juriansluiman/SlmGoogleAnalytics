@@ -42,7 +42,7 @@ namespace SlmGoogleAnalyticsTest\View\Helper;
 use PHPUnit_Framework_TestCase as TestCase;
 use SlmGoogleAnalytics\View\Helper\GoogleAnalytics as Helper;
 use SlmGoogleAnalyticsTest\View\Helper\TestAsset\CustomViewHelper;
-use Zend\View\Renderer\PhpRenderer;
+use Laminas\View\Renderer\PhpRenderer;
 
 class GoogleAnalyticsTest extends TestCase
 {
@@ -72,7 +72,7 @@ class GoogleAnalyticsTest extends TestCase
 
     public function testHelperThrowsExceptionWithNonExistingContainer()
     {
-        $this->setExpectedException('Zend\ServiceManager\Exception\ServiceNotFoundException');
+        $this->setExpectedException('Laminas\ServiceManager\Exception\ServiceNotFoundException');
 
         $this->helper->setContainerName('NonExistingViewHelper');
         $helper = $this->helper;

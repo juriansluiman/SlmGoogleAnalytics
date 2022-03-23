@@ -39,8 +39,8 @@
  */
 namespace SlmGoogleAnalytics\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Helper\HeadScript;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Helper\HeadScript;
 use SlmGoogleAnalytics\Exception\RuntimeException;
 
 class GoogleAnalytics extends AbstractHelper

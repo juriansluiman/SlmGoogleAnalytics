@@ -39,10 +39,10 @@
  */
 namespace SlmGoogleAnalytics;
 
-use Zend\EventManager\EventInterface;
-use Zend\Http\Request as HttpRequest;
-use Zend\ModuleManager\Feature;
-use Zend\Mvc\MvcEvent;
+use Laminas\EventManager\EventInterface;
+use Laminas\Http\Request as HttpRequest;
+use Laminas\ModuleManager\Feature;
+use Laminas\Mvc\MvcEvent;
 
 class Module implements
     Feature\AutoloaderProviderInterface,
@@ -53,10 +53,10 @@ class Module implements
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
+            'Laminas\Loader\ClassMapAutoloader' => array(
                 __DIR__ . '/autoload_classmap.php',
             ),
-            'Zend\Loader\StandardAutoloader' => array(
+            'Laminas\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 ),

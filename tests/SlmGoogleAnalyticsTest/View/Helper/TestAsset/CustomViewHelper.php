@@ -39,7 +39,7 @@
  */
 namespace SlmGoogleAnalyticsTest\View\Helper\TestAsset;
 
-use Zend\View\Helper\AbstractHelper;
+use Laminas\View\Helper\AbstractHelper;
 
 class CustomViewHelper extends AbstractHelper
 {

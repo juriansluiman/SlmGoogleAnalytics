@@ -57,8 +57,8 @@ return [
         'factories'  => [
             SlmGoogleAnalytics\Analytics\Tracker::class     => SlmGoogleAnalytics\Service\TrackerFactory::class,
             SlmGoogleAnalytics\Service\ScriptFactory::class => SlmGoogleAnalytics\Service\ScriptFactory::class,
-            SlmGoogleAnalytics\View\Helper\Script\Analyticsjs::class => \Zend\ServiceManager\Factory\InvokableFactory::class,
-            SlmGoogleAnalytics\View\Helper\Script\Gajs::class        => \Zend\ServiceManager\Factory\InvokableFactory::class,
+            SlmGoogleAnalytics\View\Helper\Script\Analyticsjs::class => \Laminas\ServiceManager\Factory\InvokableFactory::class,
+            SlmGoogleAnalytics\View\Helper\Script\Gajs::class        => \Laminas\ServiceManager\Factory\InvokableFactory::class,
         ],
     ],
     'view_helpers'     => [

@@ -39,7 +39,7 @@
  */
 namespace SlmGoogleAnalytics\View\Helper\Script;
 
-use Zend\Json\Json;
+use Laminas\Json\Json;
 use SlmGoogleAnalytics\Analytics\Event;
 use SlmGoogleAnalytics\Analytics\Tracker;
 use SlmGoogleAnalytics\Analytics\Ecommerce\Item;

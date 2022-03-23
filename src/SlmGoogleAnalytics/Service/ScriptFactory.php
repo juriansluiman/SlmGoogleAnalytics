@@ -41,8 +41,8 @@ namespace SlmGoogleAnalytics\Service;
 
 use Interop\Container\ContainerInterface;
 use SlmGoogleAnalytics\View\Helper\Script\ScriptInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 class ScriptFactory implements FactoryInterface
 {
