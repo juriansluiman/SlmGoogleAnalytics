@@ -18,14 +18,14 @@
     ],
     "require": {
         "php": ">=8.0",
-        "laminas/laminas-escaper": "2.9.*",
-        "laminas/laminas-eventmanager": "3.4.*",
-        "laminas/laminas-http": "2.15.*",
+        "laminas/laminas-escaper": "^2.12",
+        "laminas/laminas-eventmanager": "^3.4",
+        "laminas/laminas-http": "^2.15",
         "laminas/laminas-json": "^3.3.0",
-        "laminas/laminas-modulemanager": "2.10.*",
-        "laminas/laminas-mvc": "3.3.*",
-        "laminas/laminas-servicemanager": "3.10.*",
-        "laminas/laminas-view": "2.14.*",
+        "laminas/laminas-modulemanager": "^2.14",
+        "laminas/laminas-mvc": "^3.3",
+        "laminas/laminas-servicemanager": "^3.10",
+        "laminas/laminas-view": "^2.20",
         "container-interop/container-interop": "^1.0"
     },
     "require-dev": {
